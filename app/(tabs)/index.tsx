@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { TextInput, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
+import { View, TextInput, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import { ThemedView } from '@/components/ThemedView'; // Assurez-vous d'importer correctement ThemedView
+import { ThemedText } from '@/components/ThemedText'; // Assurez-vous d'importer correctement ThemedText
+import Icon from 'react-native-vector-icons/FontAwesome'; // Importer l'icône de FontAwesome
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -10,10 +11,14 @@ export default function LoginScreen() {
   const handleLogin = () => {
   };
 
+  const handleGoogleLogin = () => {
+    // Handle Google login logic here
+  };
+
   return (
     <ThemedView style={styles.container}>
       <Image
-        source={require('@/assets/images/logo.png')}
+        source={require('@/assets/images/logo.png')} // Remplacez par le chemin de votre logo
         style={styles.logo}
       />
       <ThemedText type="title" style={styles.title}>
@@ -39,7 +44,16 @@ export default function LoginScreen() {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Connexion</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {}}>
+      <View style={styles.dividerContainer}>
+        <View style={styles.divider} />
+        <Text style={styles.dividerText}>ou</Text>
+        <View style={styles.divider} />
+      </View>
+      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
+        <Icon name="google" size={20} color="#fff" style={styles.googleIcon} />
+        <Text style={styles.googleButtonText}>Se connecter avec Google</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => {/* Handle forgot password logic */}}>
         <Text style={styles.forgotPassword}>Mot de passe oublié ?</Text>
       </TouchableOpacity>
     </ThemedView>
@@ -52,7 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Vous pouvez ajuster cette couleur selon le thème
   },
 
   logo: {
@@ -65,7 +79,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: "#1f1f1f",
+    color: '#1D3D47',
   },
 
   input: {
@@ -81,21 +95,52 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     padding: 16,
-    backgroundColor: '#ffbf00',
+    backgroundColor: '#1D3D47', // Vous pouvez ajuster cette couleur selon le thème
     borderRadius: 8,
     alignItems: 'center',
     marginVertical: 8,
   },
 
   buttonText: {
-    color: '#1f1f1f',
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
   },
 
   forgotPassword: {
-    color: '#1f1f1f',
+    color: '#1D3D47', // Vous pouvez ajuster cette couleur selon le thème
     marginTop: 16,
   },
-  
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    marginVertical: 16,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#ddd',
+  },
+  dividerText: {
+    marginHorizontal: 8,
+    color: '#888',
+  },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    padding: 16,
+    backgroundColor: '#C81D25', // Couleur du bouton Google
+    borderRadius: 8,
+    justifyContent: 'center',
+  },
+  googleIcon: {
+    marginRight: 8,
+  },
+  googleButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
 });
