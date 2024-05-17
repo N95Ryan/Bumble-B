@@ -45,3 +45,5 @@ Une fois l'application lancée, vous pouvez explorer les différentes fonctionna
 # 👥 Auteurs
 - [Ryan PINA-SILASSE](https://github.com/N95Ryan)
 - [Nathan PINARD](https://github.com/YOUGBOY95)
+=======
+Une fois l'application lancée, vous pouvez explorer les différentes fonctionnalités et naviguer entre les écrans pour voir comment les composants interagissent. Le but est de se familiariser avec le cycle de développement de React Native et d'expérimenter avec les concepts appris en classe.
