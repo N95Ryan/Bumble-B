@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-# Bumble-B
-=======
-# Bumble B
+# Bumble B 
 
 Bumble B est une application mobile développée dans le cadre d'un projet scolaire pour apprendre et maîtriser React Native. Ce projet vise à fournir une introduction pratique au développement d'applications mobiles multiplateformes avec React Native.
 
@@ -49,4 +46,3 @@ Pour installer et exécuter l'application localement, suivez ces étapes :
 ## Utilisation
 
 Une fois l'application lancée, vous pouvez explorer les différentes fonctionnalités et naviguer entre les écrans pour voir comment les composants interagissent. Le but est de se familiariser avec le cycle de développement de React Native et d'expérimenter avec les concepts appris en classe.
->>>>>>> origin/sandbox
