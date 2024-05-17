@@ -6,11 +6,13 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  Linking
 } from "react-native";
-import { ThemedView } from "@/components/ThemedView"; // Assurez-vous d'importer correctement ThemedView
-import { ThemedText } from "@/components/ThemedText"; // Assurez-vous d'importer correctement ThemedText
-import Icon from "react-native-vector-icons/FontAwesome"; // Importer l'icône de FontAwesome
+import { ThemedView } from "@/components/ThemedView"; // Make sure to import ThemedView correctly
+import { ThemedText } from "@/components/ThemedText"; // Make sure to import ThemedText correctly
+import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icon
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -22,15 +24,12 @@ export default function LoginScreen() {
     // Handle Google login logic here
   };
 
-  const openLink = (URL: string) => {
-    Linking.openURL(URL).catch((err) => {
-      console.error("Failed to open URL: ", err);
-    });
-
+  const Stack = createNativeStackNavigator();
+    
   return (
     <ThemedView style={styles.container}>
       <Image
-        source={require("@/assets/images/logo.png")} // Remplacez par le chemin de votre logo
+        source={require("@/assets/images/logo.png")} // Replace with the path to your logo
         style={styles.logo}
       />
       <ThemedText type="title" style={styles.title}>
@@ -73,12 +72,16 @@ export default function LoginScreen() {
         <Text style={styles.forgotPassword}>Mot de passe oublié ?</Text>
       </TouchableOpacity>
 
-      {/* <View style={styles.container}>
-      <TouchableOpacity onPress={() => openLink('/app/(tabs)/signUp.tsx')}>
-        <Text style={styles.forgotPassword}>Cliquez ici pour ouvrir un lien</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('signUp')}
+        >
+        <Text style={styles.signUpButton}>
+          Pas encore de compte ? Inscrivez-vous !
+        </Text>
       </TouchableOpacity>
-    </View>     */}
     </ThemedView>
+
+
   );
 }
 
@@ -88,7 +91,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 16,
-    backgroundColor: "#fff", // Vous pouvez ajuster cette couleur selon le thème
+    backgroundColor: "#fff",
   },
 
   logo: {
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     padding: 16,
-    backgroundColor: "#1D3D47", // Vous pouvez ajuster cette couleur selon le thème
+    backgroundColor: "#1D3D47",
     borderRadius: 8,
     alignItems: "center",
     marginVertical: 8,
@@ -130,9 +133,15 @@ const styles = StyleSheet.create({
   },
 
   forgotPassword: {
-    color: "#1D3D47", // Vous pouvez ajuster cette couleur selon le thème
+    color: "#1D3D47",
     marginTop: 16,
   },
+
+  signUpButton: {
+    color: "#1D3D47",
+    marginTop: 16,
+  },
+
   dividerContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -153,7 +162,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     padding: 16,
-    backgroundColor: "#C81D25", // Couleur du bouton Google
+    backgroundColor: "#C81D25",
     borderRadius: 8,
     justifyContent: "center",
   },
@@ -165,4 +174,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-});}
+});
