@@ -1,17 +1,12 @@
-# Bumble B
+# Présentation du projet Bumble B 👨‍🏫
 
-Bumble B est une application mobile développée dans le cadre d'un projet scolaire pour apprendre et maîtriser React Native. Ce projet vise à fournir une introduction pratique au développement d'applications mobiles multiplateformes avec React Native.
+Bumble B est une application mobile développée dans le cadre d'un projet scolaire. Ce projet vise à fournir une introduction pratique au développement d'applications mobiles multiplateformes via React Native et Expo.
 
-## Table des matières
+## Sommaire
 
-- [À propos](#à-propos)
 - [Fonctionnalités](#fonctionnalités)
 - [Installation](#installation)
 - [Utilisation](#utilisation)
-
-## À propos
-
-Bumble B est conçu pour être une application éducative, mettant en pratique les concepts fondamentaux de React Native. Le projet permet aux étudiants de se familiariser avec les composants, les états, les props, et la navigation dans une application React Native.
 
 ## Fonctionnalités
 
@@ -27,7 +22,7 @@ Pour installer et exécuter l'application localement, suivez ces étapes :
 
 1. Clonez le dépôt :
    ```bash
-   git clone https://github.com/votre-utilisateur/bumble-b.git
+   git clone https://github.com/N95Ryan/Bumble-B
    ```
 2. Accédez au répertoire du projet :
    ```bash
@@ -45,4 +40,8 @@ Pour installer et exécuter l'application localement, suivez ces étapes :
 
 ## Utilisation
 
-Une fois l'application lancée, vous pouvez explorer les différentes fonctionnalités et naviguer entre les écrans pour voir comment les composants interagissent. Le but est de se familiariser avec le cycle de développement de React Native et d'expérimenter avec les concepts appris en classe.
+Une fois l'application lancée, vous pouvez explorer les différentes fonctionnalités et naviguer entre les écrans pour voir comment les composants interagissent.
+
+# 👥 Auteurs
+- [Ryan PINA-SILASSE](https://github.com/N95Ryan)
+- [Nathan PINARD](https://github.com/YOUGBOY95)
