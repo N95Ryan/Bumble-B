@@ -7,12 +7,13 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
+import { HeaderPage } from "@/components/HeaderPage";
 import { ThemedView } from "@/components/ThemedView"; // Assurez-vous d'importer correctement ThemedView
 import { ThemedText } from "@/components/ThemedText"; // Assurez-vous d'importer correctement ThemedText
 import Icon from "react-native-vector-icons/FontAwesome"; // Importer l'icône de FontAwesome
 
 export default function SignUpScreen() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");s
   const [password, setPassword] = useState("");
 
   const handleSignUp = () => {};
@@ -23,6 +24,7 @@ export default function SignUpScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      <HeaderPage />
       <Image
         source={require("@/assets/images/logo.png")} // Remplacez par le chemin de votre logo
         style={styles.logo}
