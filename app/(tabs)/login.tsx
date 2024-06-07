@@ -12,6 +12,7 @@ import { ThemedText } from "@/components/ThemedText"; // Make sure to import The
 import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icon
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { HeaderBlock } from "@/components/HeaderBlock";
 
 
 export default function LoginScreen() {
@@ -28,13 +29,14 @@ export default function LoginScreen() {
     
   return (
     <ThemedView style={styles.container}>
-      <Image
+      <HeaderBlock />
+      {/* <Image
         source={require("@/assets/images/logo.png")} // Replace with the path to your logo
         style={styles.logo}
-      />
-      <ThemedText type="title" style={styles.title}>
+        /> */}
+      {/* <ThemedText type="title" style={styles.title}>
         Bienvenue sur Bumble B ! 🐝
-      </ThemedText>
+        </ThemedText> */}
       <TextInput
         style={styles.input}
         placeholder="Adresse e-mail"
@@ -43,7 +45,7 @@ export default function LoginScreen() {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
-      />
+        />
       <TextInput
         style={styles.input}
         placeholder="Mot de passe"
