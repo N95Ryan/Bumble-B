@@ -7,7 +7,7 @@ export const HeaderBlock = () => {
         source={require("../assets/images/logoBordered.png")}
       />
       <Text style={styles.title}>Bumble B 🐝</Text>
-      <Text style={styles.subtitle}>Connectez-vous</Text>
+      <Text style={styles.subtitle}>Transformez votre smartphone en un volant virtuel et vivez des sensations fortes à chaque course !</Text>
     </View>
   );
 };
@@ -29,5 +29,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#475569",
-  },
+    textAlign: "center",
+    marginTop: 8,}
 });
