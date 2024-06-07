@@ -1,7 +1,7 @@
 # Présentation du projet Bumble B 👨‍🏫
 
-Bumble B est une application mobile développée dans le cadre d'un projet scolaire. Ce projet vise à télécommander une voiture depuis l'application. 
-La voiture va chercher à se connecter à un réseau WiFi existant pour permettre de contrôler le véhicule.
+Bumble B est une application mobile développée dans le cadre d'un projet scolaire. Ce projet vise à utiliser son téléphone en guise de volant pour diriger une voiture depuis l'application. 
+Pour cela, la voiture va se connecter à un réseau WiFi, recevoir ses instructions en WebSocket et renvoyer sa télémétrie en MQTT.
 
 ## Sommaire 📋
 
@@ -13,7 +13,7 @@ La voiture va chercher à se connecter à un réseau WiFi existant pour permettr
 
 - Interface utilisateur simple et intuitive
 - Composants réutilisables
-- Navigation entre les écrans
+- Navigation entre les écrans simplifiée
 - Gestion de l'état avec React Hooks
 - Support pour les plateformes iOS et Android
 
