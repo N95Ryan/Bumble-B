@@ -1,6 +1,7 @@
 # Présentation du projet Bumble B 👨‍🏫
 
-Bumble B est une application mobile développée dans le cadre d'un projet scolaire. Ce projet vise à fournir une introduction pratique au développement d'applications mobiles multiplateformes via React Native et Expo.
+Bumble B est une application mobile développée dans le cadre d'un projet scolaire. Ce projet vise à télécommander une voiture depuis l'application. 
+La voiture va chercher à se connecter à un réseau WiFi existant pour permettre de contrôler le véhicule.
 
 ## Sommaire 📋
 
