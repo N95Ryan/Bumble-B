@@ -1,74 +1,13 @@
-import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from "react-native";
-import { ThemedView } from "@/components/ThemedView"; // Make sure to import ThemedView correctly
-import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icon
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { View, StyleSheet } from "react-native";
 import { HeaderBlock } from "@/components/HeaderBlock";
+import { LoginForm } from "@/components/LoginForm";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = () => {};
-
-  const handleGoogleLogin = () => {
-    // Handle Google login logic here
-  };
-
-  const Stack = createNativeStackNavigator();
-
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       <HeaderBlock />
-      <TextInput
-        style={styles.input}
-        placeholder="Adresse e-mail"
-        placeholderTextColor="#888"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Mot de passe"
-        placeholderTextColor="#888"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Connexion</Text>
-      </TouchableOpacity>
-      <View style={styles.dividerContainer}>
-        <View style={styles.divider} />
-        <Text style={styles.dividerText}>ou</Text>
-        <View style={styles.divider} />
-      </View>
-      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
-        <Icon name="google" size={20} color="#fff" style={styles.googleIcon} />
-        <Text style={styles.googleButtonText}>Se connecter avec Google</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          /* Handle forgot password logic */
-        }}
-      >
-        <Text style={styles.forgotPassword}>Mot de passe oublié ?</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate("signUp")}>
-        <Text style={styles.signUpButton}>
-          Pas encore de compte ? Inscrivez-vous !
-        </Text>
-      </TouchableOpacity>
-    </ThemedView>
+      <LoginForm />
+    </View>
   );
 }
 
@@ -77,82 +16,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 16,
+    padding: 24,
     backgroundColor: "#fff",
-  },
-
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-    color: "#1D3D47",
-  },
-
-  input: {
-    width: "100%",
-    padding: 16,
-    marginVertical: 8,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    backgroundColor: "#f9f9f9",
-  },
-
-  button: {
-    width: "100%",
-    padding: 16,
-    backgroundColor: "#1D3D47",
-    borderRadius: 8,
-    alignItems: "center",
-    marginVertical: 8,
-  },
-
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-
-  forgotPassword: {
-    color: "#1D3D47",
-    marginTop: 16,
-  },
-
-  signUpButton: {
-    color: "#1D3D47",
-    marginTop: 16,
-  },
-
-  dividerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    marginVertical: 16,
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "#ddd",
-  },
-  dividerText: {
-    marginHorizontal: 8,
-    color: "#888",
-  },
-  googleButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    padding: 16,
-    backgroundColor: "#C81D25",
-    borderRadius: 8,
-    justifyContent: "center",
-  },
-  googleIcon: {
-    marginRight: 8,
-  },
-  googleButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
   },
 });
