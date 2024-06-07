@@ -3,17 +3,13 @@ import {
   View,
   TextInput,
   StyleSheet,
-  Image,
   Text,
   TouchableOpacity,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView"; // Make sure to import ThemedView correctly
-import { ThemedText } from "@/components/ThemedText"; // Make sure to import ThemedText correctly
 import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icon
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { HeaderBlock } from "@/components/HeaderBlock";
-
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -26,17 +22,10 @@ export default function LoginScreen() {
   };
 
   const Stack = createNativeStackNavigator();
-    
+
   return (
     <ThemedView style={styles.container}>
       <HeaderBlock />
-      {/* <Image
-        source={require("@/assets/images/logo.png")} // Replace with the path to your logo
-        style={styles.logo}
-        /> */}
-      {/* <ThemedText type="title" style={styles.title}>
-        Bienvenue sur Bumble B ! 🐝
-        </ThemedText> */}
       <TextInput
         style={styles.input}
         placeholder="Adresse e-mail"
@@ -45,7 +34,7 @@ export default function LoginScreen() {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
-        />
+      />
       <TextInput
         style={styles.input}
         placeholder="Mot de passe"
@@ -74,16 +63,12 @@ export default function LoginScreen() {
         <Text style={styles.forgotPassword}>Mot de passe oublié ?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate('signUp')}
-        >
+      <TouchableOpacity onPress={() => navigation.navigate("signUp")}>
         <Text style={styles.signUpButton}>
           Pas encore de compte ? Inscrivez-vous !
         </Text>
       </TouchableOpacity>
     </ThemedView>
-
-
   );
 }
 
@@ -94,12 +79,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
     backgroundColor: "#fff",
-  },
-
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 32,
   },
 
   title: {
