@@ -12,6 +12,15 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
       }}>
+        <Tabs.Screen
+          name="Home"
+          options={{
+            title: 'Inscription',
+            tabBarIcon: ({ color, focused }) => (
+              <MaterialCommunityIcons name={focused ? 'account-plus' : 'account-plus-outline'} color={color} size={28}/>
+            ),
+          }}
+        />
       <Tabs.Screen
         name="login"
         options={{
@@ -22,15 +31,6 @@ export default function TabLayout() {
         }}
       />
       
-      <Tabs.Screen
-        name="signUp"
-        options={{
-          title: 'Inscription',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons name={focused ? 'account-plus' : 'account-plus-outline'} color={color} size={28}/>
-          ),
-        }}
-      />
 
       <Tabs.Screen
         name="dashboard"

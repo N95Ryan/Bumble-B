@@ -1,12 +1,12 @@
 import { View, StyleSheet } from "react-native";
 import { HeaderBlock } from "@/components/HeaderBlock";
-import { LoginForm } from "@/components/LoginForm";
+import { HomeButtons } from "@/components/HomeButtons";
 
 export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <HeaderBlock />
-      <LoginForm />
+      <HomeButtons />
     </View>
   );
 }
