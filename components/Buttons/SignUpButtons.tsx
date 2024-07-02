@@ -1,14 +1,14 @@
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
-export const HomeButtons = () => {
+export const SignUpButtons = () => {
   return (
     <>
-      <View style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>Connexion</Text>
-      </View>
-      <View style={styles.guestButton}>
+      <TouchableOpacity style={styles.loginButton} onPress={() => {}}>
+        <Text style={styles.loginButtonText}>S'inscrire</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.guestButton}>
         <Text style={styles.guestButtonText}>Mode invité</Text>
-      </View>
+      </TouchableOpacity>
     </>
   );
 };
@@ -48,28 +48,15 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
 
-
   loginButtonText: {
     color: "#713F12",
-    fontWeight: "semibold",
+    fontWeight: "bold",
     fontSize: 16,
   },
 
   guestButtonText: {
     color: "#1E293B",
-    fontWeight: "semibold",
+    fontWeight: "bold",
     fontSize: 16,
-  },
-
-  forgotPassword: {
-    fontSize: 16,
-    marginTop: 8,
-    color: "#94A3B8",
-  },
-
-  loginLink: {
-    fontSize: 16,
-    marginTop: 8,
-    color: "#94A3B8",
   },
 });

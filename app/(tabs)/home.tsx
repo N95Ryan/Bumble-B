@@ -1,11 +1,12 @@
 import { View, StyleSheet } from "react-native";
-import { HeaderBlock } from "@/components/HeaderBlock";
-import { HomeButtons } from "@/components/HomeButtons";
+import { HeaderBlockHome } from "@/components/HeaderBlocks/HeaderBlockHome";
+import { HomeButtons } from "@/components/Buttons/HomeButtons";
 
-export default function LoginScreen() {
+export default function Homepage(){
+
   return (
     <View style={styles.container}>
-      <HeaderBlock />
+      <HeaderBlockHome />
       <HomeButtons />
     </View>
   );

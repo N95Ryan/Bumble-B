@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 
-export const HeaderBlock = () => {
+export const HeaderBlockHome = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/images/logoBordered2.png")}
+        source={require("../../assets/images/bigLogoBordered.png")}
       />
       <View style={styles.titleContainer}>
       <Text style={styles.title}>Bumble B</Text>
