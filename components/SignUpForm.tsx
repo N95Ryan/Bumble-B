@@ -5,9 +5,8 @@ import {
     TextInput,
     StyleSheet,
   } from "react-native";
-  import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icon
   
-  export const LoginForm = () => {
+  export const SignUpForm = () => {
     return (
       <View style={styles.container}>
         <TextInput
@@ -24,19 +23,9 @@ import {
           secureTextEntry
         />
         <View style={styles.loginButton}>
-          <Text style={styles.loginButtonText}>Connexion</Text>
+          <Text style={styles.loginButtonText}>S'inscrire</Text>
         </View>        
-        <View style={styles.dividerContainer}>
-        <View style={styles.divider} />
-        <Text style={styles.dividerText}>ou</Text>
-        <View style={styles.divider} />
-      </View>
-        <View style={styles.googleButton}>
-          <Icon name="google" size={20} color="#fff" style={styles.googleIcon} />
-          <Text style={styles.googleButtonText}>Se connecter avec Google</Text>
-        </View>
-        <Text style={styles.forgotPassword}>Mot de passe oublié ?</Text>
-        <Link href="/signUp" style={styles.loginLink}>Pas encore de compte ? S'inscrire</Link>
+        <Link href="/signUp" style={styles.loginLink}>Vous avez déjà un compte ? Connexion</Link>
       </View>
     );
   };
@@ -72,45 +61,7 @@ import {
       fontWeight: "bold",
       fontSize: 16,
     },
-
-    dividerContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        width: "100%",
-        marginVertical: 16,
-      },
-    
-    divider: {
-        flex: 1,
-        height: 1,
-        backgroundColor: "#ddd",
-      },
-    
-    dividerText: {
-        marginHorizontal: 8,
-        color: "#888",
-      },
       
-    googleButton: {
-      flexDirection: "row",
-      alignItems: "center",
-      width: "100%",
-      padding: 16,
-      backgroundColor: "#C81D25",
-      borderRadius: 24,
-      justifyContent: "center",
-    },
-  
-    googleIcon: {
-      marginRight: 8,
-    },
-  
-    googleButtonText: {
-      color: "#fff",
-      fontWeight: "bold",
-      fontSize: 16,
-    },
-
     forgotPassword: {
         fontSize: 16,
         marginTop: 8,

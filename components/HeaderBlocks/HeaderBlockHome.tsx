@@ -1,13 +1,15 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 
-export const HeaderBlock = () => {
+export const HeaderBlockHome = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/images/logoBordered.png")}
+        source={require("../../assets/images/bigLogoBordered.png")}
       />
-      <Text style={styles.title}>Bumble B 🐝</Text>
+      <View style={styles.titleContainer}>
+      <Text style={styles.title}>Bumble B</Text>
       <Text style={styles.subtitle}>Transformez votre smartphone en un volant virtuel et vivez des sensations fortes à chaque course !</Text>
+        </View>
     </View>
   );
 };
@@ -16,7 +18,13 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 16,
+  },
+
+  titleContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 48,
+    paddingBottom: 48,
   },
 
   title: {
@@ -30,5 +38,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#475569",
     textAlign: "center",
-    marginTop: 8,}
+  }
 });

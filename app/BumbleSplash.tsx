@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Image, StyleSheet, Animated } from 'react-native';
+import { Image, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 
-const NotFoundSplashScreen: React.FC = () => {
+const BumbleSplash: React.FC = () => {
   const router = useRouter();
   const opacity = useRef(new Animated.Value(1)).current;
 
@@ -18,7 +18,7 @@ const NotFoundSplashScreen: React.FC = () => {
         useNativeDriver: true,
       }).start(async () => {
         await SplashScreen.hideAsync();
-        router.replace('/login'); // Redirection vers la page de connexion
+        router.replace('/home'); // Redirection vers la page de connexion
       });
     };
 
@@ -46,4 +46,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default NotFoundSplashScreen;
+export default BumbleSplash;
