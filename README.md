@@ -11,7 +11,7 @@ Pour cela, la voiture va se connecter à un réseau WiFi, recevoir ses instructi
 
 ## Fonctionnalités 🛠
 
-- Interface utilisateur simple et intuitive
+- UI simple et intuitive
 - Composants réutilisables
 - Navigation entre les écrans simplifiée
 - Gestion de l'état avec React Hooks

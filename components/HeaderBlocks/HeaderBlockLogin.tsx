@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 
-export const HeaderBlockSignUp = () => {
+export const HeaderBlockLogin = () => {
   return (
     <View style={styles.container}>
       <Image
@@ -8,7 +8,7 @@ export const HeaderBlockSignUp = () => {
       />
       <View style={styles.titleContainer}>
       <Text style={styles.title}>Bumble B</Text>
-      <Text style={styles.subtitle}>Inscrivez-vous</Text>
+      <Text style={styles.subtitle}>Connectez vous</Text>
         </View>
     </View>
   );
