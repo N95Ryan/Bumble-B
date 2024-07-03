@@ -1,3 +1,4 @@
+// app/BumbleSplash.tsx
 import React, { useEffect, useRef } from 'react';
 import { Image, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -8,13 +9,13 @@ const BumbleSplash: React.FC = () => {
   const opacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    const redirect = async () => {
+    const showSplashScreen = async () => {
+      await SplashScreen.preventAutoHideAsync(); // Empêche le splash screen de se cacher automatiquement
       await new Promise(resolve => setTimeout(resolve, 3000)); // Délai de 3 secondes
 
-      // Cache le splash screen natif avec une animation d'opacité
       Animated.timing(opacity, {
         toValue: 0,
-        duration: 500, // Durée de l'animation en ms
+        duration: 500,
         useNativeDriver: true,
       }).start(async () => {
         await SplashScreen.hideAsync();
@@ -22,12 +23,12 @@ const BumbleSplash: React.FC = () => {
       });
     };
 
-    redirect();
+    showSplashScreen();
   }, [opacity, router]);
 
   return (
     <Animated.View style={[styles.container, { opacity }]}>
-      <Image source={require('../assets/images/splash.png')} style={styles.image} />
+      <Image source={require('../assets/images/Splash screen.png')} style={styles.image} />
     </Animated.View>
   );
 };
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '80%',
     resizeMode: 'contain',
-  }
+  },
 });
 
 export default BumbleSplash;
