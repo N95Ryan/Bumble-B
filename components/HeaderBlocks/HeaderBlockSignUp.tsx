@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 export const HeaderBlockSignUp = () => {
   return (
     <View style={styles.container}>
-      <Image
+      <Image style={styles.logo}
         source={require("../../assets/images/smallLogoBordered.png")}
       />
       <View style={styles.titleContainer}>
@@ -19,6 +19,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
+  logo: {
+    width: 150,
+    height: 150,
+  },
+
 
   titleContainer: {
     justifyContent: "center",

@@ -1,10 +1,11 @@
-import { View, Image, Text, Dimensions, StyleSheet} from "react-native";
+import { View, Image, Text, StyleSheet} from "react-native";
 
 export const HeaderBlockHome = () => {
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../../assets/images/bigLogoBordered.png")}
+      <Image style={styles.logo}
+        source={require("../../assets/images/bigLogoBordered.png")
+        }
       />
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Bumble B</Text>
@@ -17,6 +18,11 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  logo: {
+    width: 320,
+    height: 320,
   },
 
   titleContainer: {

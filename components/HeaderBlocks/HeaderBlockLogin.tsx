@@ -4,6 +4,7 @@ export const HeaderBlockLogin = () => {
   return (
     <View style={styles.container}>
       <Image
+      style={styles.logo}
         source={require("../../assets/images/smallLogoBordered.png")}
       />
       <View style={styles.titleContainer}>
@@ -18,6 +19,11 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  logo: {
+    width: 150,
+    height: 150,
   },
 
   titleContainer: {
