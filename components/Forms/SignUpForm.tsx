@@ -25,7 +25,7 @@ import {
         <View style={styles.loginButton}>
           <Text style={styles.loginButtonText}>S'inscrire</Text>
         </View>        
-        <Link href="/home" style={styles.loginLink}>Vous avez déjà un compte ? Connexion</Link>
+        <Link href="/login" style={styles.loginLink}>Vous avez déjà un compte ? Connexion</Link>
       </View>
     );
   };
