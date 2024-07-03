@@ -6,7 +6,7 @@ import {
     StyleSheet,
   } from "react-native";
   
-  export const SignUpForm = () => {
+  export const LoginForm = () => {
     return (
       <View style={styles.container}>
         <TextInput
@@ -23,9 +23,9 @@ import {
           secureTextEntry
         />
         <View style={styles.loginButton}>
-          <Text style={styles.loginButtonText}>S'inscrire</Text>
+          <Text style={styles.loginButtonText}>Se connecter</Text>
         </View>        
-        <Link href="/signUp" style={styles.loginLink}>Vous avez déjà un compte ? Connexion</Link>
+        <Link href="/signUp" style={styles.signUpLink}>Pas encore de compte ? S’inscrire</Link>
       </View>
     );
   };
@@ -44,7 +44,8 @@ import {
       borderRadius: 24,
       backgroundColor: "#F1F5F9",
       fontSize: 16,
-      fontWeight: "normal",
+      fontWeight: "500",
+
     },
   
     loginButton: {
@@ -68,7 +69,7 @@ import {
         color: "#94A3B8",
       },
 
-    loginLink: {
+    signUpLink: {
         fontSize: 16,
         marginTop: 8,
         color: "#94A3B8",
