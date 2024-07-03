@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { HeaderBlockHome } from "@/components/HeaderBlocks/HeaderBlockHome";
-import { HomeButtons } from "@/components/Buttons/HomeButtons";
+import { HomeButtons } from "@/components//Buttons/HomeButtons";
 
 export default function Homepage(){
 

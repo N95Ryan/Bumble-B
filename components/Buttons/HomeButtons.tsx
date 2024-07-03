@@ -1,11 +1,12 @@
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Link } from "expo-router";
 
 export const HomeButtons = () => {
   return (
     <>
-<TouchableOpacity style={styles.loginButton} onPress={() => {}}>
-  <Text style={styles.loginButtonText}>S'inscrire</Text>
-</TouchableOpacity>
+      <View style={styles.loginButton}>
+        <Link href={"/signUp"} style={styles.loginButtonText}>S'inscrire</Link>
+      </View>
       <TouchableOpacity style={styles.guestButton}>
         <Text style={styles.guestButtonText}>Mode invité</Text>
       </TouchableOpacity>
@@ -58,5 +59,5 @@ const styles = StyleSheet.create({
     color: "#1E293B",
     fontWeight: "bold",
     fontSize: 16,
-  }
-})
+  },
+});

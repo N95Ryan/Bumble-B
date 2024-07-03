@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Image, Text, Dimensions, StyleSheet} from "react-native";
 
 export const HeaderBlockHome = () => {
   return (
@@ -7,12 +7,11 @@ export const HeaderBlockHome = () => {
         source={require("../../assets/images/bigLogoBordered.png")}
       />
       <View style={styles.titleContainer}>
-      <Text style={styles.title}>Bumble B</Text>
-      <Text style={styles.subtitle}>Transformez votre smartphone en un volant virtuel et vivez des sensations fortes à chaque course !</Text>
-        </View>
+        <Text style={styles.title}>Bumble B</Text>
+        <Text style={styles.subtitle}>Transformez votre smartphone en un volant virtuel et vivez des sensations fortes à chaque course !</Text>
+      </View>
     </View>
-  );
-};
+  );};
 
 const styles = StyleSheet.create({
   container: {

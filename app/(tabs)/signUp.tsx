@@ -1,11 +1,11 @@
 import { View, StyleSheet } from "react-native";
 import { HeaderBlockSignUp } from "@/components/HeaderBlocks/HeaderBlockSignUp";
-import { SignUpForm } from "@/components/SignUpForm";
+import { SignUpForm } from "@/components/Forms/SignUpForm";
 
 export default function SignUpPage() {
   return (
     <View style={styles.container}>
-      <HeaderBlockSignUp />     
+      <HeaderBlockSignUp />
       <SignUpForm />
     </View>
   );
