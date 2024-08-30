@@ -1,32 +1,69 @@
+import { useState } from "react";
 import { Link } from "expo-router";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { createUser } from "../../services/userServices";
 
 export const SignUpForm = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmedPassword, setConfirmPassword] = useState('');
+
+  const handleSignUp = async () => {
+
+    if (password !== confirmedPassword) {
+      alert("Les mots de passe ne correspondent pas.");
+      return;
+    }
+
+    try {
+      await createUser(username, email, password, confirmedPassword);
+      alert("Utilisateur créé avec succès !");
+    } catch (error) {
+      console.error("Erreur lors de la création de l'utilisateur:", error);
+      alert("Une erreur est survenue, veuillez réessayer.");
+    }
+  };
+
   return (
     <View style={styles.container}>
+        <TextInput
+        style={styles.input}
+        placeholder="Nom d'utilisateur"
+        placeholderTextColor="#94A3B8"
+        onChangeText={setUsername}
+        value={username}
+      />
+      
       <TextInput
         style={styles.input}
         placeholder="E-mail"
         placeholderTextColor="#94A3B8"
         keyboardType="email-address"
         autoCapitalize="none"
+        onChangeText={setEmail}
+        value={email}
       />
       <TextInput
         style={styles.input}
         placeholder="Mot de passe"
         placeholderTextColor="#94A3B8"
         secureTextEntry
+        onChangeText={setPassword}
+        value={password}
       />
       <TextInput
         style={styles.input}
         placeholder="Confirmation du mot de passe"
         placeholderTextColor="#94A3B8"
         secureTextEntry
+        onChangeText={setConfirmPassword}
+        value={confirmedPassword}
       />
 
-      <Link href={"/"} style={styles.loginButton}>
+      <TouchableOpacity style={styles.loginButton} onPress={handleSignUp}>
         <Text style={styles.loginButtonText}>S'inscrire</Text>
-      </Link>
+      </TouchableOpacity>
 
       <Link href="/login" style={styles.loginLink}>
         Vous avez déjà un compte ? Connexion

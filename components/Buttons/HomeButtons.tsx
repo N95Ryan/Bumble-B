@@ -1,9 +1,9 @@
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, Platform } from "react-native";
 import { Link } from "expo-router";
 
 export const HomeButtons = () => {
   return (
-    <>      
+    <>
       <Link href={"/signUp"} style={styles.loginButton}>
       <Text style={styles.loginButtonText}>S'inscrire</Text>
       </Link>
@@ -16,23 +16,8 @@ export const HomeButtons = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-  },
 
-  input: {
-    width: "100%",
-    padding: 16,
-    marginVertical: 8,
-    borderRadius: 24,
-    backgroundColor: "#F1F5F9",
-    fontSize: 16,
-    fontWeight: "normal",
-  },
-
-  loginButton: {
+ loginButton: {
     width: "100%",
     padding: 16,
     backgroundColor: "#FDE047",
@@ -45,7 +30,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 16,
     backgroundColor: "#E2E8F0",
-    borderRadius: 24,
+    borderRadius: Platform.OS === "web" ? 24 : 0,
     alignItems: "center",
     marginVertical: 8,
   },
@@ -56,6 +41,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     display: "flex",
     justifyContent: "center",
+
   },
 
   guestButtonText: {
@@ -64,6 +50,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     display: "flex",
     justifyContent: "center",
-
   },
 });
