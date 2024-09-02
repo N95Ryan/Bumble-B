@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useRouter } from 'expo-router'; // Importer useRouter pour la navigation
+import { useState, useEffect } from "react";
+import { useRouter } from 'expo-router'; // Assurez-vous d'utiliser useRouter pour la navigation
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { createUser } from "../../services/userServices";
 
@@ -8,19 +8,36 @@ export const SignUpForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmPassword] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const router = useRouter(); // Obtenir l'instance du routeur
 
+  // Fonction pour valider le formulaire
+  const validateForm = () => {
+    // Vérifiez que tous les champs sont remplis et que les mots de passe correspondent
+    const isValid = username.trim() !== '' &&
+                    email.trim() !== '' &&
+                    password.trim() !== '' &&
+                    confirmedPassword.trim() !== '' &&
+                    password === confirmedPassword;
+    setIsFormValid(isValid);
+  };
+
+  // Utiliser useEffect pour valider le formulaire chaque fois qu'un champ change
+  useEffect(() => {
+    validateForm();
+  }, [username, email, password, confirmedPassword]);
+
   const handleSignUp = async () => {
-    if (password !== confirmedPassword) {
-      alert("Les mots de passe ne correspondent pas.");
+    if (!isFormValid) {
+      alert("Veuillez remplir tous les champs correctement.");
       return;
     }
 
     try {
       await createUser(username, email, password, confirmedPassword);
       alert("Utilisateur créé avec succès !");
-      router.push('/dashboard'); // Redirection vers /dashboard
+      router.push('/login'); // Redirection vers /login
     } catch (error) {
       console.error("Erreur lors de la création de l'utilisateur:", error);
       alert("Une erreur est survenue, veuillez réessayer.");
@@ -63,7 +80,11 @@ export const SignUpForm = () => {
         value={confirmedPassword}
       />
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleSignUp}>
+      <TouchableOpacity 
+        style={[styles.loginButton, !isFormValid && styles.disabledButton]} // Appliquer un style différent si le bouton est désactivé
+        onPress={handleSignUp}
+        disabled={!isFormValid} // Désactiver le bouton si le formulaire n'est pas valide
+      >
         <Text style={styles.loginButtonText}>S'inscrire</Text>
       </TouchableOpacity>
 
@@ -100,6 +121,10 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     display: "flex",
     justifyContent: "center",
+  },
+
+  disabledButton: {
+    backgroundColor: "#D1D5DB", // Couleur de fond lorsque le bouton est désactivé
   },
 
   loginButtonText: {
