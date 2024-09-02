@@ -20,17 +20,17 @@ interface AuthResponse {
 // Fonction pour obtenir le jeton depuis AsyncStorage
 const getToken = async (): Promise<string> => {
   try {
-	const token = await AsyncStorage.getItem('jwt_token');
-	return token || '';
+    const token = await AsyncStorage.getItem('jwt_token');
+    return token || '';
   } catch (error) {
-	console.error('Error getting token from AsyncStorage:', error);
-	return '';
+    console.error('Error getting token from AsyncStorage:', error);
+    return '';
   }
 };
 
-// Création d'une instance Axios avec un token dynamique
+// Création d'une instance Axios avec la base URL
 const userService = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'http://localhost:8080', // URL de base
   timeout: 1000,
   headers: { 'Content-Type': 'application/json' },
 });
@@ -44,40 +44,53 @@ const getUsers = async (): Promise<User[]> => {
 // Trouver un utilisateur par son ID
 const findUser = async (id: number): Promise<User | null> => {
   try {
-	const token = await getToken();
-	const { data }: AxiosResponse<User> = await userService.get(`/users/${id}`, {
-	  headers: {
-		Authorization: `Bearer ${token}`,
-		'Content-Type': 'application/json',
-	  },
-	});
-	return data;
+    const token = await getToken();
+    const { data }: AxiosResponse<User> = await userService.get(`/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return data;
   } catch (error) {
-	console.log(error);
-	return null;
+    console.log(error);
+    return null;
   }
 };
 
 // Création d'un nouvel utilisateur
-const createUser = async ( username: string, email:string , password: string, confirmedPassword: string) => {
-    if (!email || !password) {
-      alert("Veuillez remplir tous les champs.");
-      return;
+const createUser = async (
+  username: string,
+  email: string,
+  confirmedPassword: string,
+  password: string
+) => {
+  if (!username || !email || !confirmedPassword || !password) {
+    alert("Veuillez remplir tous les champs.");
+    return;
+  }
+
+  try {
+    const response = await userService.post('/register', { // Endpoint corrigé pour l'inscription
+      username: username,
+      email: email,
+      confirmedPassword: confirmedPassword,
+      password: password,
+      role: 'USER',
+    });
+
+    // Sauvegarder le token reçu dans AsyncStorage
+    if (response.data.token) {
+      await AsyncStorage.setItem('jwt_token', response.data.token);
     }
-  
-    if (password !== confirmedPassword) {
-      alert("Les mots de passe ne correspondent pas");
-      return;
-    }
-  
-    try {
-      await createUser(username, email, password, confirmedPassword);
-      alert("Utilisateur créé avec succès !");
-    } catch (error) {
-      console.error("Erreur lors de la création de l'utilisateur:", error);
-      alert("Une erreur est survenue, veuillez réessayer.");
-    }
-  };
+
+    console.log("Réponse du serveur:", response);
+    alert("Utilisateur créé avec succès !");
+  } catch (error) {
+    console.error("Erreur lors de la création de l'utilisateur:", error);
+    alert("Une erreur est survenue, veuillez réessayer.");
+  }
+};
 
 // Mise à jour d'un utilisateur
 const updateUser = async (
@@ -87,27 +100,28 @@ const updateUser = async (
   email: string,
   password: string | null
 ): Promise<void> => {
-  const body = password === null 
-	? { username: username, name: name, email: email }
-	: { username: username, name: name, email: email, password: password };
-  await userService.patch(`/user/${id}/update`, body, {
-	headers: {
-	  'Content-Type': 'multipart/form-data',
-	  Accept: 'application/json',
-	},
+  const body = password === null
+    ? { username: username, name: name, email: email }
+    : { username: username, name: name, email: email, password: password };
+
+  await userService.patch(`/users/${id}/update`, body, {
+    headers: {
+      'Content-Type': 'application/json', // Ajustez le type de contenu si nécessaire
+      Accept: 'application/json',
+    },
   });
 };
 
 // Suppression d'un utilisateur
 const deleteUser = async (id: number): Promise<void> => {
-  await userService.delete(`/user/${id}/delete`);
+  await userService.delete(`/users/${id}/delete`);
 };
 
 // Authentification d'un utilisateur
 const authentification = async (username: string, password: string): Promise<AuthResponse> => {
   const response: AxiosResponse<AuthResponse> = await userService.post('/signin', {
-	username: username,
-	password: password,
+    username: username,
+    password: password,
   });
   return response.data;
 };
@@ -115,42 +129,42 @@ const authentification = async (username: string, password: string): Promise<Aut
 // Vérification de l'email d'un utilisateur
 const checkEmail = async (email: string): Promise<AxiosResponse> => {
   try {
-	const response: AxiosResponse = await userService.post(
-	  '/check-email',
-	  {
-		email: email,
-	  },
-	  {
-		headers: {
-		  'Content-Type': 'multipart/form-data',
-		},
-	  }
-	);
-	return response;
+    const response: AxiosResponse = await userService.post(
+      '/check-email',
+      {
+        email: email,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json', // Ajustez le type de contenu si nécessaire
+        },
+      }
+    );
+    return response;
   } catch (error) {
-	console.error('Error:', error);
-	throw error;
+    console.error('Error:', error);
+    throw error;
   }
 };
 
-// Vérification d'un utilisateur déjà exisant
+// Vérification d'un utilisateur déjà existant
 const checkUsername = async (username: string): Promise<AxiosResponse> => {
   try {
-	const response: AxiosResponse = await userService.post(
-	  '/check-username',
-	  {
-		username: username,
-	  },
-	  {
-		headers: {
-		  'Content-Type': 'multipart/form-data',
-		},
-	  }
-	);
-	return response;
+    const response: AxiosResponse = await userService.post(
+      '/check-username',
+      {
+        username: username,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json', // Ajustez le type de contenu si nécessaire
+        },
+      }
+    );
+    return response;
   } catch (error) {
-	console.error('Error:', error);
-	throw error;
+    console.error('Error:', error);
+    throw error;
   }
 };
 
