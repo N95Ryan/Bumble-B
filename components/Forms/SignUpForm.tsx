@@ -1,13 +1,19 @@
 import { useState } from "react";
-import { useRouter } from 'expo-router'; // Importer useRouter pour la navigation
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router"; // Importer useRouter pour la navigation
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { createUser } from "../../services/userServices";
 
 export const SignUpForm = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmedPassword, setConfirmPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmedPassword, setConfirmPassword] = useState("");
 
   const router = useRouter(); // Obtenir l'instance du routeur
 
@@ -20,7 +26,7 @@ export const SignUpForm = () => {
     try {
       await createUser(username, email, password, confirmedPassword);
       alert("Utilisateur créé avec succès !");
-      router.push('/dashboard'); // Redirection vers /dashboard
+      router.push("/login"); // Redirection vers /login
     } catch (error) {
       console.error("Erreur lors de la création de l'utilisateur:", error);
       alert("Une erreur est survenue, veuillez réessayer.");
@@ -36,7 +42,7 @@ export const SignUpForm = () => {
         onChangeText={setUsername}
         value={username}
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="E-mail"
@@ -67,7 +73,10 @@ export const SignUpForm = () => {
         <Text style={styles.loginButtonText}>S'inscrire</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push('/login')} style={styles.loginLink}>
+      <TouchableOpacity
+        onPress={() => router.push("/login")}
+        style={styles.loginLink}
+      >
         <Text>Vous avez déjà un compte ? Connexion</Text>
       </TouchableOpacity>
     </View>
