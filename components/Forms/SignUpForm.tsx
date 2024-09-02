@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "expo-router";
+import { useRouter } from 'expo-router'; // Importer useRouter pour la navigation
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { createUser } from "../../services/userServices";
 
@@ -9,8 +9,9 @@ export const SignUpForm = () => {
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmPassword] = useState('');
 
-  const handleSignUp = async () => {
+  const router = useRouter(); // Obtenir l'instance du routeur
 
+  const handleSignUp = async () => {
     if (password !== confirmedPassword) {
       alert("Les mots de passe ne correspondent pas.");
       return;
@@ -19,6 +20,7 @@ export const SignUpForm = () => {
     try {
       await createUser(username, email, password, confirmedPassword);
       alert("Utilisateur créé avec succès !");
+      router.push('/dashboard'); // Redirection vers /dashboard
     } catch (error) {
       console.error("Erreur lors de la création de l'utilisateur:", error);
       alert("Une erreur est survenue, veuillez réessayer.");
@@ -27,7 +29,7 @@ export const SignUpForm = () => {
 
   return (
     <View style={styles.container}>
-        <TextInput
+      <TextInput
         style={styles.input}
         placeholder="Nom d'utilisateur"
         placeholderTextColor="#94A3B8"
@@ -65,9 +67,9 @@ export const SignUpForm = () => {
         <Text style={styles.loginButtonText}>S'inscrire</Text>
       </TouchableOpacity>
 
-      <Link href="/login" style={styles.loginLink}>
-        Vous avez déjà un compte ? Connexion
-      </Link>
+      <TouchableOpacity onPress={() => router.push('/login')} style={styles.loginLink}>
+        <Text>Vous avez déjà un compte ? Connexion</Text>
+      </TouchableOpacity>
     </View>
   );
 };
