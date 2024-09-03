@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import StartRace from "@/components/startRace";
 
 // Interface pour le payload JWT
 interface JwtPayload {
-  sub?: string;  // Utiliser 'sub' comme clé si c'est la clé de votre nom d'utilisateur
+  sub?: string; // Utiliser 'sub' comme clé si c'est la clé de votre nom d'utilisateur
   // Ajouter d'autres champs si nécessaire
 }
 
 function parseJwt(token: string) {
   try {
-    const base64Url = token.split('.')[1];
+    const base64Url = token.split(".")[1];
     if (!base64Url) {
-      throw new Error('Invalid token format');
+      throw new Error("Invalid token format");
     }
-    
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const jsonPayload = atob(base64);
-    
+
     // Ajout du support pour UTF-8
     const decoded = decodeURIComponent(
-      jsonPayload.split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join('')
+      jsonPayload
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
     );
 
     return JSON.parse(decoded);
@@ -45,7 +49,7 @@ export default function DashboardPage() {
           // Décoder le JWT pour extraire le nom d'utilisateur
           const decodedToken = parseJwt(token) as JwtPayload;
           console.log("Payload décodé:", decodedToken);
-          setUsername(decodedToken?.sub || 'Inconnu');
+          setUsername(decodedToken?.sub || "Inconnu");
         }
       } catch (error) {
         console.error("Erreur lors de la récupération du token :", error);
@@ -56,11 +60,13 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <View style={styles.screen}>
-      <Text style={styles.title}>TABLEAU DE BORD</Text>
-      <Text style={styles.greeting}>Bonjour {username}!</Text>
-      <Text style={styles.text}>🚧 Page en construction 🚧</Text>
-    </View>
+    <>
+      <View style={styles.screen}>
+        <Text style={styles.greeting}>Bonjour {username} !</Text>
+        <Text style={styles.text}>Lorem ipsum dolor sit amet</Text>
+      </View>
+      <StartRace />
+    </>
   );
 }
 
@@ -69,26 +75,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ffbf00",
+    backgroundColor: "#F1F5F9",
   },
-  title: {
+
+  greeting: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#1f1f1f",
     textAlign: "center",
     margin: 4,
   },
-  greeting: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#1f1f1f",
-    textAlign: "center",
-    margin: 4,
-  },
+
   text: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#1f1f1f",
+    color: "#64748B",
     textAlign: "center",
     fontFamily: "Arial",
     margin: 4,
