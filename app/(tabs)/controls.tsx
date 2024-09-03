@@ -8,9 +8,13 @@ import { StyleSheet, View, useWindowDimensions } from 'react-native';
 export default function DashboardPage() {
     const { width, height } = useWindowDimensions();
     const is_landscape = width > height;
+    const is_tall = height > 900;
 
     return (
-        <View style={[styles.container, is_landscape && styles.container_landscape]}>
+        <View style={[
+                styles.container, 
+                is_landscape && styles.container_landscape,
+                is_tall && styles.container_tall]}>
             <Bandeau is_landscape={is_landscape} />
             <Image is_landscape={is_landscape} />
             <Units is_landscape={is_landscape} />
@@ -31,5 +35,10 @@ const styles = StyleSheet.create({
     },
     container_landscape: {
         position: 'relative'
+    },
+    container_tall: {
+        justifyContent: 'flex-start',
+        paddingVertical: 48,
+        rowGap: 32,
     }
 });

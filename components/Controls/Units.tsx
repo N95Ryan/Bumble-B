@@ -5,11 +5,11 @@ const Units = ({ is_landscape }: { is_landscape: boolean }) => {
     return (
         <View style={[styles.units_container, is_landscape && styles.units_container_landscape]}>
             <View style={styles.unit_content}>
-                <Text style={styles.unit_label}>Vitesse:</Text>
+                <Text style={styles.unit_label}>Vitesse</Text>
                 <Text style={styles.unit_value}>120 km/h</Text>
             </View>
             <View style={styles.unit_content}>
-                <Text style={styles.unit_label}>Distance:</Text>
+                <Text style={styles.unit_label}>Distance</Text>
                 <Text style={styles.unit_value}>150 km</Text>
             </View>
         </View>

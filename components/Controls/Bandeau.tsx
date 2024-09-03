@@ -33,8 +33,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
     },
     icon: {
-        width: 32,
-        height: 32,
+        resizeMode: 'contain',
     },
     time_value: {
         fontSize: 33,
@@ -44,6 +43,7 @@ const styles = StyleSheet.create({
     container_icons: {
         display: 'flex',
         flexDirection: 'row',
+        alignItems: 'center',
         columnGap: 16,
     },
     container_bandeau_landscape: {
