@@ -4,27 +4,33 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Interface pour le payload JWT
 interface JwtPayload {
-  username: string;
+  sub?: string;  // Utiliser 'sub' comme clé si c'est la clé de votre nom d'utilisateur
   // Ajouter d'autres champs si nécessaire
 }
 
 function parseJwt(token: string) {
   try {
     const base64Url = token.split('.')[1];
+    if (!base64Url) {
+      throw new Error('Invalid token format');
+    }
+    
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64).split('').map(function(c) {
+    const jsonPayload = atob(base64);
+    
+    // Ajout du support pour UTF-8
+    const decoded = decodeURIComponent(
+      jsonPayload.split('').map(function(c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join('')
     );
 
-    return JSON.parse(jsonPayload);
+    return JSON.parse(decoded);
   } catch (error) {
     console.error("Erreur lors du décodage du JWT :", error);
     return null;
   }
 }
-
 
 export default function DashboardPage() {
   const [username, setUsername] = useState<string>("");
@@ -33,10 +39,13 @@ export default function DashboardPage() {
     const fetchUsername = async () => {
       try {
         const token = await AsyncStorage.getItem("jwt_token");
+        console.log("Token récupéré depuis AsyncStorage:", token);
+
         if (token) {
           // Décoder le JWT pour extraire le nom d'utilisateur
           const decodedToken = parseJwt(token) as JwtPayload;
-          setUsername(decodedToken.username);
+          console.log("Payload décodé:", decodedToken);
+          setUsername(decodedToken?.sub || 'Inconnu');
         }
       } catch (error) {
         console.error("Erreur lors de la récupération du token :", error);
