@@ -1,11 +1,15 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 
 const StartRace = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.playButtonTextContainer}>
-        <Text style={styles.text}>Démarrer une course</Text>
+      <View style={styles.startRaceContainer}>
+        <Text style={styles.startRaceText}>Démarrer une course</Text>
+        <Image
+          style={styles.startRaceImage}
+          source={require("../StartRace/assets/Frame-19.png")}
+        />
         <TouchableOpacity style={styles.playButtonContainer}>
           <View style={styles.playButton} />
         </TouchableOpacity>
@@ -39,55 +43,76 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F7FA",
     borderRadius: 12,
     alignItems: "center",
+    margin: 8, // Add margin to the container
   },
-  playButtonTextContainer: {
+
+  startRaceContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16, // Ajout d'une marge en bas pour espacer des détails
+    marginBottom: 16,
+    margin: 8, // Add margin to the startRaceContainer
   },
+
+  startRaceText: {
+    fontSize: 20,
+    color: "#000",
+    margin: 8, // Add margin to the startRaceText
+  },
+
+  startRaceImage: {
+    fontSize: 28,
+    color: "#000",
+    margin: 8, // Add margin to the startRaceImage
+  },
+
   playButtonContainer: {
     width: 50,
     height: 50,
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
-    margin: 8, // Ajout d'une marge droite pour espacer le bouton du texte
+    margin: 8, // Add margin to the playButtonContainer
   },
+
   playButton: {
     width: 50,
     height: 50,
-    backgroundColor: "#FFEB3B",
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
+    fontStyle: "italic",
+    margin: 8, // Add margin to the playButton
   },
-  text: {
-    fontSize: 18,
-    color: "#000",
-  },
+
   detailsContainer: {
-    marginBottom: 16, // Ajout d'une marge en bas pour espacer du bouton d'historique
+    marginBottom: 16, // Add margin to the detailsContainer
+    margin: 8, // Add margin to the detailsContainer
   },
   detailRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 8,
+    margin: 8, // Add margin to the detailRow
   },
   detailLabel: {
     fontSize: 16,
     color: "#333",
+    margin: 8, // Add margin to the detailLabel
   },
   detailValue: {
     fontSize: 16,
     color: "#666",
+    margin: 8, // Add margin to the detailValue
   },
   historyButton: {
     padding: 12,
     backgroundColor: "#007BFF",
     borderRadius: 8,
+    margin: 8, // Add margin to the historyButton
   },
   historyButtonText: {
     color: "#FFF",
     fontSize: 16,
+    margin: 8, // Add margin to the historyButtonText
   },
 });

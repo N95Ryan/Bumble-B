@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import StartRace from "@/components/startRace";
+import StartRace from "@/components/StartRace/startRace";
 
 // Interface pour le payload JWT
 interface JwtPayload {
