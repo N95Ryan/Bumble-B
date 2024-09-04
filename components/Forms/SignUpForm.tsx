@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { useRouter } from 'expo-router'; // Assurez-vous d'utiliser useRouter pour la navigation
+import { useRouter } from 'expo-router';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { createUser } from "../../services/userServices";
 import Toast from 'react-native-toast-message';
+import { Ionicons } from '@expo/vector-icons'; // Import de Ionicons pour les icônes
 
 export const SignUpForm = () => {
-  // Ajout des nouveaux champs d'état
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [username, setUsername] = useState('');
@@ -13,10 +13,10 @@ export const SignUpForm = () => {
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmPassword] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false); // État pour la visibilité du mot de passe
 
-  const router = useRouter(); // Obtenir l'instance du routeur
+  const router = useRouter();
 
-  // Fonction pour valider le formulaire
   const validateForm = () => {
     const isValid = firstname.trim() !== '' &&
                     lastname.trim() !== '' &&
@@ -45,7 +45,6 @@ export const SignUpForm = () => {
     }
 
     try {
-      // Mise à jour de la fonction createUser pour accepter firstname et lastname
       await createUser(firstname, lastname, username, email, password, confirmedPassword);
       Toast.show({
         type: 'success',
@@ -54,11 +53,9 @@ export const SignUpForm = () => {
         text2: "Utilisateur créé avec succès !",
         visibilityTime: 4000,
       });
-      router.push('/login'); // Redirection vers /login
+      router.push('/login');
     } catch (error) {
-      // Vérifier si l'erreur est une instance de Error
       const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
-
       console.error("Erreur lors de la création de l'utilisateur:", errorMessage);
       Toast.show({
         type: 'error',
@@ -72,7 +69,6 @@ export const SignUpForm = () => {
 
   return (
     <View style={styles.container}>
-      {/* Nouveau champ pour prénom */}
       <TextInput
         style={styles.input}
         placeholder="Prénom"
@@ -80,8 +76,7 @@ export const SignUpForm = () => {
         onChangeText={setFirstname}
         value={firstname}
       />
-      
-      {/* Nouveau champ pour nom de famille */}
+
       <TextInput
         style={styles.input}
         placeholder="Nom de famille"
@@ -97,7 +92,7 @@ export const SignUpForm = () => {
         onChangeText={setUsername}
         value={username}
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="E-mail"
@@ -107,27 +102,39 @@ export const SignUpForm = () => {
         onChangeText={setEmail}
         value={email}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Mot de passe"
-        placeholderTextColor="#94A3B8"
-        secureTextEntry
-        onChangeText={setPassword}
-        value={password}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Confirmation du mot de passe"
-        placeholderTextColor="#94A3B8"
-        secureTextEntry
-        onChangeText={setConfirmPassword}
-        value={confirmedPassword}
-      />
 
-      <TouchableOpacity 
-        style={[styles.loginButton, !isFormValid && styles.disabledButton]} // Appliquer un style différent si le bouton est désactivé
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Mot de passe"
+          placeholderTextColor="#94A3B8"
+          secureTextEntry={!passwordVisible} // Utilise l'état pour afficher ou masquer le mot de passe
+          onChangeText={setPassword}
+          value={password}
+        />
+        <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+          <Ionicons name={passwordVisible ? "eye-off" : "eye"} size={24} color="#94A3B8" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Confirmation du mot de passe"
+          placeholderTextColor="#94A3B8"
+          secureTextEntry={!passwordVisible} // Utilise l'état pour afficher ou masquer le mot de passe
+          onChangeText={setConfirmPassword}
+          value={confirmedPassword}
+        />
+        <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+          <Ionicons name={passwordVisible ? "eye-off" : "eye"} size={24} color="#94A3B8" />
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity
+        style={[styles.loginButton, !isFormValid && styles.disabledButton]}
         onPress={handleSignUp}
-        disabled={!isFormValid} // Désactiver le bouton si le formulaire n'est pas valide
+        disabled={!isFormValid}
       >
         <Text style={styles.loginButtonText}>S'inscrire</Text>
       </TouchableOpacity>
@@ -146,7 +153,6 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 16,
   },
-
   input: {
     width: "100%",
     padding: 16,
@@ -156,7 +162,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-
+  passwordContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F1F5F9",
+    borderRadius: 24,
+    marginVertical: 8,
+    paddingHorizontal: 16,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingVertical: 16,
+    fontSize: 16,
+  },
   loginButton: {
     width: "100%",
     padding: 16,
@@ -166,23 +185,14 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     justifyContent: "center",
   },
-
   disabledButton: {
-    backgroundColor: "#D1D5DB", // Couleur de fond lorsque le bouton est désactivé
+    backgroundColor: "#D1D5DB",
   },
-
   loginButtonText: {
     color: "#713F12",
     fontWeight: "bold",
     fontSize: 16,
   },
-
-  forgotPassword: {
-    fontSize: 16,
-    marginTop: 8,
-    color: "#94A3B8",
-  },
-
   loginLink: {
     fontSize: 16,
     marginTop: 8,
