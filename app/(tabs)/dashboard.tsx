@@ -61,6 +61,7 @@ export default function DashboardPage() {
   }, []);
 
   return (
+
     <>
       <View style={styles.container}>
         <Image
@@ -83,7 +84,15 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F1F5F9",
+    backgroundColor: "white",
+  },
+    
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#1f1f1f",
+    textAlign: "center",
+    margin: 4,
   },
 
   greeting: {

@@ -2,8 +2,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from 'expo-router'; // Assurez-vous d'utiliser useRouter pour la navigation
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { createUser } from "../../services/userServices";
+import Toast from 'react-native-toast-message';
 
 export const SignUpForm = () => {
+  // Ajout des nouveaux champs d'état
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,8 +18,9 @@ export const SignUpForm = () => {
 
   // Fonction pour valider le formulaire
   const validateForm = () => {
-    // Vérifiez que tous les champs sont remplis et que les mots de passe correspondent
-    const isValid = username.trim() !== '' &&
+    const isValid = firstname.trim() !== '' &&
+                    lastname.trim() !== '' &&
+                    username.trim() !== '' &&
                     email.trim() !== '' &&
                     password.trim() !== '' &&
                     confirmedPassword.trim() !== '' &&
@@ -23,29 +28,68 @@ export const SignUpForm = () => {
     setIsFormValid(isValid);
   };
 
-  // Utiliser useEffect pour valider le formulaire chaque fois qu'un champ change
   useEffect(() => {
     validateForm();
-  }, [username, email, password, confirmedPassword]);
+  }, [firstname, lastname, username, email, password, confirmedPassword]);
 
   const handleSignUp = async () => {
     if (!isFormValid) {
-      alert("Veuillez remplir tous les champs correctement.");
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Erreur',
+        text2: "Veuillez remplir tous les champs correctement.",
+        visibilityTime: 4000,
+      });
       return;
     }
 
     try {
-      await createUser(username, email, password, confirmedPassword);
-      alert("Utilisateur créé avec succès !");
+      // Mise à jour de la fonction createUser pour accepter firstname et lastname
+      await createUser(firstname, lastname, username, email, password, confirmedPassword);
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: 'Succès',
+        text2: "Utilisateur créé avec succès !",
+        visibilityTime: 4000,
+      });
       router.push('/login'); // Redirection vers /login
     } catch (error) {
-      console.error("Erreur lors de la création de l'utilisateur:", error);
-      alert("Une erreur est survenue, veuillez réessayer.");
+      // Vérifier si l'erreur est une instance de Error
+      const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
+
+      console.error("Erreur lors de la création de l'utilisateur:", errorMessage);
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Erreur',
+        text2: `Une erreur est survenue : ${errorMessage}`,
+        visibilityTime: 4000,
+      });
     }
   };
 
   return (
     <View style={styles.container}>
+      {/* Nouveau champ pour prénom */}
+      <TextInput
+        style={styles.input}
+        placeholder="Prénom"
+        placeholderTextColor="#94A3B8"
+        onChangeText={setFirstname}
+        value={firstname}
+      />
+      
+      {/* Nouveau champ pour nom de famille */}
+      <TextInput
+        style={styles.input}
+        placeholder="Nom de famille"
+        placeholderTextColor="#94A3B8"
+        onChangeText={setLastname}
+        value={lastname}
+      />
+
       <TextInput
         style={styles.input}
         placeholder="Nom d'utilisateur"
@@ -100,6 +144,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+    padding: 16,
   },
 
   input: {
@@ -119,7 +164,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: "center",
     marginVertical: 8,
-    display: "flex",
     justifyContent: "center",
   },
 
