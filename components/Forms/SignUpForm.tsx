@@ -50,12 +50,15 @@ export const SignUpForm = () => {
       });
       router.push('/login'); // Redirection vers /login
     } catch (error) {
-      console.error("Erreur lors de la création de l'utilisateur:", error);
+      // Vérifier si l'erreur est une instance de Error
+      const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
+
+      console.error("Erreur lors de la création de l'utilisateur:", errorMessage);
       Toast.show({
         type: 'error',
         position: 'top',
         text1: 'Erreur',
-        text2: "Une erreur est survenue, veuillez réessayer.",
+        text2: `Une erreur est survenue : ${errorMessage}`,
         visibilityTime: 4000,
       });
     }

@@ -29,17 +29,22 @@ const getToken = async (): Promise<string> => {
   }
 };
 
-// Création d'une instance Axios avec la base URL
+// Création d'une instance Axios avec un délai d'attente plus long
 const userService = axios.create({
   baseURL: "http://localhost:8080", // URL de base
-  timeout: 1000,
+  timeout: 5000, // Délai d'attente de 5 secondes
   headers: { "Content-Type": "application/json" },
 });
 
 // Fetch tous les utilisateurs depuis l'API
 const getUsers = async (): Promise<User[]> => {
-  const response: AxiosResponse<User[]> = await userService.get("/users");
-  return response.data;
+  try {
+    const response: AxiosResponse<User[]> = await userService.get("/users");
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des utilisateurs:", error);
+    throw error;
+  }
 };
 
 // Trouver un utilisateur par son ID
@@ -57,7 +62,7 @@ const findUser = async (id: number): Promise<User | null> => {
     );
     return data;
   } catch (error) {
-    console.log(error);
+    console.log("Erreur lors de la récupération de l'utilisateur:", error);
     return null;
   }
 };
@@ -66,21 +71,25 @@ const findUser = async (id: number): Promise<User | null> => {
 const createUser = async (
   username: string,
   email: string,
-  confirmedPassword: string,
-  password: string
+  password: string,
+  confirmedPassword: string
 ) => {
-  if (!username || !email || !confirmedPassword || !password) {
+  if (!username || !email || !password || !confirmedPassword) {
     alert("Veuillez remplir tous les champs.");
+    return;
+  }
+
+  if (password !== confirmedPassword) {
+    alert("Les mots de passe ne correspondent pas.");
     return;
   }
 
   try {
     const response = await userService.post("/register", {
-      // Endpoint corrigé pour l'inscription
-      username: username,
-      email: email,
-      confirmedPassword: confirmedPassword,
-      password: password,
+      username,
+      email,
+      password,
+      confirmedPassword,
       role: "USER",
     });
 
@@ -107,20 +116,30 @@ const updateUser = async (
 ): Promise<void> => {
   const body =
     password === null
-      ? { username: username, name: name, email: email }
-      : { username: username, name: name, email: email, password: password };
+      ? { username, name, email }
+      : { username, name, email, password };
 
-  await userService.patch(`/users/${id}/update`, body, {
-    headers: {
-      "Content-Type": "application/json", // Ajustez le type de contenu si nécessaire
-      Accept: "application/json",
-    },
-  });
+  try {
+    await userService.patch(`/users/${id}/update`, body, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de l'utilisateur:", error);
+    throw error;
+  }
 };
 
 // Suppression d'un utilisateur
 const deleteUser = async (id: number): Promise<void> => {
-  await userService.delete(`/users/${id}/delete`);
+  try {
+    await userService.delete(`/users/${id}/delete`);
+  } catch (error) {
+    console.error("Erreur lors de la suppression de l'utilisateur:", error);
+    throw error;
+  }
 };
 
 // Authentification d'un utilisateur
@@ -132,13 +151,13 @@ const authentification = async (
     const response: AxiosResponse<AuthResponse> = await userService.post(
       "/login",
       {
-        username: username,
-        password: password,
+        username,
+        password,
       }
     );
     return response.data;
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Erreur lors de l'authentification:", error);
     return null;
   }
 };
@@ -149,17 +168,17 @@ const checkEmail = async (email: string): Promise<AxiosResponse> => {
     const response: AxiosResponse = await userService.post(
       "/check-email",
       {
-        email: email,
+        email,
       },
       {
         headers: {
-          "Content-Type": "application/json", // Ajustez le type de contenu si nécessaire
+          "Content-Type": "application/json",
         },
       }
     );
     return response;
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Erreur lors de la vérification de l'email:", error);
     throw error;
   }
 };
@@ -170,17 +189,17 @@ const checkUsername = async (username: string): Promise<AxiosResponse> => {
     const response: AxiosResponse = await userService.post(
       "/check-username",
       {
-        username: username,
+        username,
       },
       {
         headers: {
-          "Content-Type": "application/json", // Ajustez le type de contenu si nécessaire
+          "Content-Type": "application/json",
         },
       }
     );
     return response;
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Erreur lors de la vérification du nom d'utilisateur:", error);
     throw error;
   }
 };

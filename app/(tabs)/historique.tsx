@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, ListRenderItem } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -18,7 +18,7 @@ interface DataItem {
 
 // Définir les types de routes disponibles
 type RootStackParamList = {
-  dashboard: undefined;
+  Home: undefined;
   Car: undefined;
   Document: undefined;
   Stats: undefined;
@@ -28,9 +28,21 @@ type RootStackParamList = {
 
 // Créer un tableau de données typé
 const data: DataItem[] = [
-  { date: '6 juin', runs: [] },
-  { date: '4 juin', runs: [{ time: '15 mn', distance: '4 km', speed: '15 km/h' }, { time: '15 mn', distance: '4 km', speed: '15 km/h' }] },
-  { date: '31 mai', runs: [] },
+  {
+    date: '6 juin',
+    runs: [],
+  },
+  {
+    date: '4 juin',
+    runs: [
+      { time: '15 mn', distance: '4 km', speed: '15 km/h' },
+      { time: '15 mn', distance: '4 km', speed: '15 km/h' },
+    ],
+  },
+  {
+    date: '31 mai',
+    runs: [],
+  },
 ];
 
 export default function HistoryPage() {
@@ -41,14 +53,9 @@ export default function HistoryPage() {
     setExpandedDate(expandedDate === date ? null : date);
   };
 
-  const renderItem: ListRenderItem<DataItem> = useCallback(({ item }) => (
+  const renderItem: ListRenderItem<DataItem> = ({ item }) => (
     <View style={styles.itemContainer}>
-      <TouchableOpacity
-        onPress={() => toggleExpand(item.date)}
-        style={styles.dateHeader}
-        accessibilityLabel={`Toggle details for ${item.date}`}
-        accessibilityRole="button"
-      >
+      <TouchableOpacity onPress={() => toggleExpand(item.date)} style={styles.dateHeader}>
         <View style={styles.dateRow}>
           <Ionicons
             name={expandedDate === item.date ? "chevron-down-outline" : "chevron-forward-outline"}
@@ -67,9 +74,9 @@ export default function HistoryPage() {
           <Ionicons name="trash-outline" size={24} color="#FF6B6B" style={styles.icon} />
         </View>
       </TouchableOpacity>
-      {expandedDate === item.date && item.runs.length > 0 ? (
+      {expandedDate === item.date && item.runs.length > 0 && (
         <View style={styles.detailsContainer}>
-          {item.runs.map((run, index) => (
+          {item.runs.map((run: Run, index: number) => (
             <View key={index} style={styles.runDetail}>
               <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Temps</Text>
@@ -87,11 +94,9 @@ export default function HistoryPage() {
             </View>
           ))}
         </View>
-      ) : (
-        expandedDate === item.date && <Text style={styles.noDataText}>Aucune course pour cette date</Text>
       )}
     </View>
-  ), [expandedDate]);
+  );
 
   return (
     <View style={styles.container}>
@@ -101,14 +106,14 @@ export default function HistoryPage() {
         </TouchableOpacity>
         <Text style={styles.title}>Historique des courses</Text>
       </View>
-      <Text style={styles.subtitle}>Retrouvez vos courses ici et leurs statistiques</Text>
+      <Text style={styles.subtitle}>Retrouver vos courses ici et leurs statistiques</Text>
       <FlatList
         data={data}
         renderItem={renderItem}
-        keyExtractor={(item, index) => `${item.date}-${index}`}
+        keyExtractor={(item) => item.date}
       />
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => navigation.navigate('dashboard')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Ionicons name="home-outline" size={28} color="#9CA3AF" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Car')}>
@@ -133,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#F1F5F9',
   },
   header: {
     flexDirection: 'row',
@@ -236,12 +241,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#E5E7EB',
-    marginTop: 16,
-  },
-  noDataText: {
-    fontSize: 14,
-    color: '#6B7280',
-    textAlign: 'center',
     marginTop: 16,
   },
 });
