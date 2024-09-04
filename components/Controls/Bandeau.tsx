@@ -1,7 +1,10 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-const Bandeau = ({ is_landscape }: { is_landscape: boolean }) => {
+type BandeauProps = {
+    is_landscape: boolean;
+};
+const Bandeau: React.FC<BandeauProps> = ({ is_landscape }) => {
     return (
         <View style={[styles.container_bandeau, is_landscape && styles.container_bandeau_landscape]}>
             <Image 

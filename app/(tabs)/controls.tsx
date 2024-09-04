@@ -5,7 +5,7 @@ import Units from '@/components/Controls/Units';
 import React from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 
-export default function DashboardPage() {
+export default function ControlsPage() {
     const { width, height } = useWindowDimensions();
     const is_landscape = width > height;
     const is_tall = height > 900;
