@@ -5,6 +5,9 @@ import { createUser } from "../../services/userServices";
 import Toast from 'react-native-toast-message';
 
 export const SignUpForm = () => {
+  // Ajout des nouveaux champs d'état
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,7 +18,9 @@ export const SignUpForm = () => {
 
   // Fonction pour valider le formulaire
   const validateForm = () => {
-    const isValid = username.trim() !== '' &&
+    const isValid = firstname.trim() !== '' &&
+                    lastname.trim() !== '' &&
+                    username.trim() !== '' &&
                     email.trim() !== '' &&
                     password.trim() !== '' &&
                     confirmedPassword.trim() !== '' &&
@@ -25,7 +30,7 @@ export const SignUpForm = () => {
 
   useEffect(() => {
     validateForm();
-  }, [username, email, password, confirmedPassword]);
+  }, [firstname, lastname, username, email, password, confirmedPassword]);
 
   const handleSignUp = async () => {
     if (!isFormValid) {
@@ -40,7 +45,8 @@ export const SignUpForm = () => {
     }
 
     try {
-      await createUser(username, email, password, confirmedPassword);
+      // Mise à jour de la fonction createUser pour accepter firstname et lastname
+      await createUser(firstname, lastname, username, email, password, confirmedPassword);
       Toast.show({
         type: 'success',
         position: 'top',
@@ -66,6 +72,24 @@ export const SignUpForm = () => {
 
   return (
     <View style={styles.container}>
+      {/* Nouveau champ pour prénom */}
+      <TextInput
+        style={styles.input}
+        placeholder="Prénom"
+        placeholderTextColor="#94A3B8"
+        onChangeText={setFirstname}
+        value={firstname}
+      />
+      
+      {/* Nouveau champ pour nom de famille */}
+      <TextInput
+        style={styles.input}
+        placeholder="Nom de famille"
+        placeholderTextColor="#94A3B8"
+        onChangeText={setLastname}
+        value={lastname}
+      />
+
       <TextInput
         style={styles.input}
         placeholder="Nom d'utilisateur"

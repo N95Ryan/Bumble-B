@@ -5,7 +5,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 interface User {
   id: number;
   username: string;
-  name: string;
+  firstname: string; // Ajout de firstname
+  lastname: string; // Ajout de lastname
   email: string;
   // Ajouter tous les champs supplémentaires que l'objet utilisateur pourrait contenir
 }
@@ -69,12 +70,14 @@ const findUser = async (id: number): Promise<User | null> => {
 
 // Création d'un nouvel utilisateur
 const createUser = async (
+  firstname: string,   // Nouveau paramètre
+  lastname: string,    // Nouveau paramètre
   username: string,
   email: string,
   password: string,
   confirmedPassword: string
 ) => {
-  if (!username || !email || !password || !confirmedPassword) {
+  if (!firstname || !lastname || !username || !email || !password || !confirmedPassword) {
     alert("Veuillez remplir tous les champs.");
     return;
   }
@@ -86,6 +89,8 @@ const createUser = async (
 
   try {
     const response = await userService.post("/register", {
+      firstname,         // Inclure dans le corps de la requête
+      lastname,          // Inclure dans le corps de la requête
       username,
       email,
       password,
@@ -110,14 +115,15 @@ const createUser = async (
 const updateUser = async (
   id: number,
   username: string,
-  name: string,
+  firstname: string,   // Nouveau paramètre
+  lastname: string,    // Nouveau paramètre
   email: string,
   password: string | null
 ): Promise<void> => {
   const body =
     password === null
-      ? { username, name, email }
-      : { username, name, email, password };
+      ? { username, firstname, lastname, email }
+      : { username, firstname, lastname, email, password };
 
   try {
     await userService.patch(`/users/${id}/update`, body, {
