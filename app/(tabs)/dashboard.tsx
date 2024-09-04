@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import StartRace from "@/components/StartRace/startRace";
+import StartRace from "@/components/RaceBoard/RaceBoard";
+import { Image } from "react-native";
 
 // Interface pour le payload JWT
 interface JwtPayload {
@@ -61,36 +62,39 @@ export default function DashboardPage() {
 
   return (
     <>
-      <View style={styles.screen}>
-        <Text style={styles.greeting}>Bonjour {username} !</Text>
+      <View style={styles.container}>
+        <Image
+          source={require("../../components/RaceBoard/assets/Frame-1.png")}
+          style={{ width: 56, height: 56 }}
+        />
+        <Text style={styles.greeting}>Bonjour {username}</Text>
         <Text style={styles.text}>Lorem ipsum dolor sit amet</Text>
+        <StartRace />
       </View>
-      <StartRace />
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  container: {
     flex: 1,
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F1F5F9",
   },
 
   greeting: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#1f1f1f",
-    textAlign: "center",
-    margin: 4,
+    color: "#1E293B",
+    fontSize: 33,
+    fontStyle: "normal",
+    fontWeight: 700,
   },
 
   text: {
-    fontSize: 18,
     color: "#64748B",
-    textAlign: "center",
-    fontFamily: "Arial",
-    margin: 4,
+    fontSize: 18,
+    fontStyle: "normal",
+    fontWeight: 400,
   },
 });
