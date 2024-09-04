@@ -1,11 +1,25 @@
-import { StyleSheet, Text, View } from "react-native";
+import Header from '@/components/Modes/Header';
+import ModeSelector from '@/components/Modes/ModeSelector';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 export default function ModesPage() {
+    const [selectedMode, setSelectedMode] = useState<'guided' | 'manual' | null>(null);
+    const router = useRouter();
+
+    const handlePress = () => {
+        if (selectedMode) router.push(`/controls?mode=${selectedMode}`);
+    };
 
     return (
         <View style={styles.container}>
-            <Text>🚧 Modes Page 🚧</Text>
-            <Text>🚧 Page en construction 🚧</Text>
+            <Header />
+            <ModeSelector 
+                selectedMode={selectedMode} 
+                setSelectedMode={setSelectedMode} 
+                handlePress={handlePress} 
+            />
         </View>
     );
 }
@@ -15,9 +29,9 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: "#FFF",
+        alignItems: 'flex-start',
+        backgroundColor: "#F1F5F9",
         padding: 24,
+        overflow: 'scroll'
     },
 });
