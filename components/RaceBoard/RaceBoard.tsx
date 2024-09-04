@@ -18,12 +18,12 @@ export default RaceBoard;
 const styles = StyleSheet.create({
   container: {
     display: "flex",
-    alignItems: "center",
-    alignSelf: "stretch",
-    padding: 16,
     backgroundColor: "white",
+    borderRadius: 32,
+    padding: 32,
+    flexDirection: "column",
     justifyContent: "center",
-    borderRadius: 12,
+    marginVertical: 24,
   },
 
   separator: {

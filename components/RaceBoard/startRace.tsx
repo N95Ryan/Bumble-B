@@ -22,16 +22,16 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     alignSelf: "stretch",
-    padding: 16,
-    backgroundColor: "white",
+    backgroundColor: "",
     justifyContent: "center",
     borderRadius: 12,
+    marginBottom: 12,
   },
 
   startRaceContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 20,
   },
 
   startRaceText: {

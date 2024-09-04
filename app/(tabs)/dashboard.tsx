@@ -78,6 +78,8 @@ export default function DashboardPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 32,
+    display: "flex",
     width: "100%",
     justifyContent: "center",
     alignItems: "center",

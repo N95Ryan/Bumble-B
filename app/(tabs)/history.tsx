@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from "react-native";
 
-export default function RacesPage() {
+export default function HistoryPage() {
   return (
     <View style={styles.screen}>
-      <Text style={styles.title}>Vos courses</Text>
+      <Text style={styles.title}>Historique des courses</Text>
       <Text style={styles.text}>🚧 Page en construction 🚧</Text>
     </View>
   );
