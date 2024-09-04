@@ -58,7 +58,7 @@ export default function DashboardPage() {
   return (
     <View style={styles.screen}>
       <Text style={styles.title}>TABLEAU DE BORD</Text>
-      <Text style={styles.greeting}>Bonjour {username}!</Text>
+      <Text style={styles.greeting}>Bonjour {username} !</Text>
       <Text style={styles.text}>🚧 Page en construction 🚧</Text>
     </View>
   );
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ffbf00",
+    backgroundColor: "white",
   },
   title: {
     fontSize: 28,

@@ -8,7 +8,7 @@ export const HomeButtons = () => {
       <Text style={styles.loginButtonText}>S'inscrire</Text>
       </Link>
 
-      <Link href={"/"} style={styles.guestButton}>
+      <Link href={"/dashboard"} style={styles.guestButton}>
       <Text style={styles.guestButtonText}>Mode invité</Text>
       </Link>
     </>
