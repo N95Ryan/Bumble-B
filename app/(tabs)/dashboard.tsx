@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import StartRace from "@/components/RaceBoard/RaceBoard";
 import { Image } from "react-native";
+import RaceBoard from "@/components/RaceBoard/RaceBoard";
 
 // Interface pour le payload JWT
 interface JwtPayload {
@@ -61,7 +61,6 @@ export default function DashboardPage() {
   }, []);
 
   return (
-
     <>
       <View style={styles.container}>
         <Image
@@ -70,7 +69,7 @@ export default function DashboardPage() {
         />
         <Text style={styles.greeting}>Bonjour {username}</Text>
         <Text style={styles.text}>Lorem ipsum dolor sit amet</Text>
-        <StartRace />
+        <RaceBoard />
       </View>
     </>
   );
@@ -84,9 +83,9 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#F1F5F9",
   },
-    
+
   title: {
     fontSize: 28,
     fontWeight: "bold",
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
   },
 
   greeting: {
-    color: "#1E293B",
+    color: "#020617",
     fontSize: 33,
     fontStyle: "normal",
     fontWeight: 700,
