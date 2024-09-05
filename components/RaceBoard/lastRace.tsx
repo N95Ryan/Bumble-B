@@ -4,14 +4,24 @@ import { StyleSheet } from "react-native";
 import { Link } from "expo-router";
 
 const LastRace = () => {
+  const currentDate = new Date().toLocaleDateString();
+
   return (
     <View>
       <Text style={style.title}>Dernière course</Text>
       <View style={style.data}>
-        <Text>Date :</Text>
-        <Text>Temps :</Text>
-        <Text>Distance :</Text>
-        <Text>Vitesse max :</Text>
+        <Text style={style.date}>
+          Date : <span style={style.datas}>{currentDate}</span>
+        </Text>
+        <Text>
+          Temps : <span style={style.datas}>15 min</span>
+        </Text>
+        <Text>
+          Distance : <span style={style.datas}>4 km</span>
+        </Text>
+        <Text>
+          Vitesse max : <span style={style.datas}>15 km/h</span>
+        </Text>
       </View>
       <View>
         <Link href="/history" style={style.link}>
@@ -65,6 +75,19 @@ const style = StyleSheet.create({
     fontWeight: 500,
     lineHeight: 20,
     letterSpacing: -0.32,
+  },
+
+  date: {
+    display: "flex",
+    justifyContent: "space-between",
+    fontSize: 14,
+    fontStyle: "normal",
+    fontWeight: 400,
+    color: "black",
+  },
+
+  datas: {
+    fontWeight: 700,
   },
 });
 

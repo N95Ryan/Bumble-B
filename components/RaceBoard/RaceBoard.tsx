@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
+import { View, StyleSheet } from "react-native";
 import StartRace from "./startRace";
 import LastRace from "./lastRace";
 import SecondPanel from "./secondPanel";
