@@ -1,30 +1,23 @@
 import { useState, useEffect } from "react";
-import { useRouter, Link } from "expo-router"; // Importez Link depuis expo-router
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import { authentification } from "../../services/userServices"; // Assurez-vous que ce chemin est correct
+import { useRouter, Link } from "expo-router";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { authentification } from "../../services/userServices";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from '@expo/vector-icons'; // Import de Ionicons pour les icônes
 
 export const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false); // État pour la visibilité du mot de passe
 
-  const router = useRouter(); // Obtenir l'instance du routeur
+  const router = useRouter();
 
-  // Fonction pour valider le formulaire
   const validateForm = () => {
     const isValid = username.trim() !== "" && password.trim() !== "";
     setIsFormValid(isValid);
   };
 
-  // Utiliser useEffect pour valider le formulaire chaque fois qu'un champ change
   useEffect(() => {
     validateForm();
   }, [username, password]);
@@ -37,17 +30,16 @@ export const LoginForm = () => {
 
     try {
       const response = await authentification(username, password);
-      console.log("Réponse de l'API :", response); // Ajoutez cette ligne pour déboguer
+      console.log("Réponse de l'API :", response);
 
       if (response && response.token) {
-        await AsyncStorage.setItem("jwt_token", response.token); // Stockage du token JWT
+        await AsyncStorage.setItem("jwt_token", response.token);
         Alert.alert("Succès", "Connexion réussie !");
 
-        // Récupérer et afficher le token dans la console
         const token = await AsyncStorage.getItem("jwt_token");
         console.log("Token JWT récupéré :", token);
 
-        router.push("/dashboard"); // Redirection vers la page dashboard
+        router.push("/dashboard");
       } else {
         Alert.alert("Erreur", "Nom d'utilisateur ou mot de passe incorrect.");
       }
@@ -66,14 +58,21 @@ export const LoginForm = () => {
         onChangeText={setUsername}
         value={username}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Mot de passe"
-        placeholderTextColor="#94A3B8"
-        secureTextEntry
-        onChangeText={setPassword}
-        value={password}
-      />
+      
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Mot de passe"
+          placeholderTextColor="#94A3B8"
+          secureTextEntry={!passwordVisible} // Utilise l'état pour afficher ou masquer le mot de passe
+          onChangeText={setPassword}
+          value={password}
+        />
+        <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+          <Ionicons name={passwordVisible ? "eye-off" : "eye"} size={24} color="#94A3B8" />
+        </TouchableOpacity>
+      </View>
+
       <TouchableOpacity
         style={[styles.loginButton, !isFormValid && styles.disabledButton]}
         onPress={handleLogin}
@@ -81,6 +80,7 @@ export const LoginForm = () => {
       >
         <Text style={styles.loginButtonText}>Se connecter</Text>
       </TouchableOpacity>
+
       <Link href="/signUp" style={styles.signUpLink}>
         Pas encore de compte ? S’inscrire
       </Link>
@@ -94,7 +94,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-
   input: {
     width: "100%",
     padding: 16,
@@ -104,7 +103,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-
+  passwordContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F1F5F9",
+    borderRadius: 24,
+    marginVertical: 8,
+    paddingHorizontal: 16,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingVertical: 16,
+    fontSize: 16,
+  },
   loginButton: {
     width: "100%",
     padding: 16,
@@ -113,17 +125,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 8,
   },
-
   disabledButton: {
     backgroundColor: "#D1D5DB",
   },
-
   loginButtonText: {
     color: "#713F12",
     fontWeight: "bold",
     fontSize: 16,
   },
-
   signUpLink: {
     fontSize: 16,
     marginTop: 8,
