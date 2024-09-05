@@ -7,12 +7,12 @@ const SecondPanel = () => {
     <View style={styles.container}>
       <View style={styles.carSettings}>
         <Image source={require("./assets/Frame-1.svg")} style={styles.icon} />
-        <Text>Configurer la voiture</Text>
+        <Text style={styles.text}>Configurer la voiture</Text>
       </View>
       <View style={styles.separator}></View>
       <View style={styles.help}>
         <Image source={require("./assets/Frame-2.svg")} style={styles.icon} />
-        <Text>Aides</Text>
+        <Text style={styles.text}>Aides</Text>
       </View>
     </View>
   );
@@ -22,51 +22,49 @@ export default SecondPanel;
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "stretch",
     backgroundColor: "#fff",
     borderRadius: 24,
+    marginHorizontal: 16,
+    paddingVertical: 12,
   },
 
   carSettings: {
-    display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
-    width: 380,
-    paddingTop: 8,
-    paddingBottom: 8,
-    gap: 8,
+    width: "100%",
+    paddingVertical: 8,
+    paddingHorizontal: 32,
   },
 
   separator: {
     height: 1,
     backgroundColor: "#E2E8F0",
     width: "100%",
-    marginTop: 4,
-    marginBottom: 4,
+    marginVertical: 4,
   },
 
   help: {
-    display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
-    width: 380,
-    paddingTop: 8,
-    paddingBottom: 8,
-    gap: 8, // Ajoutez un espace entre les éléments si nécessaire
+    width: "100%",
+    paddingVertical: 8,
+    paddingHorizontal: 32,
   },
 
   icon: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 32,
-    width: 32,
-    marginRight: 8, // Espace entre les icônes et le texte
+    width: 24,
+    height: 24,
+    marginRight: 8,
+  },
+
+  text: {
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: 400,
+    color: "#1E293B",
   },
 });
