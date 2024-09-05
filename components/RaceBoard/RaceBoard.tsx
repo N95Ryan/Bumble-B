@@ -1,15 +1,19 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text, Image } from "react-native";
 import StartRace from "./startRace";
 import LastRace from "./lastRace";
+import SecondPanel from "./secondPanel";
 
 const RaceBoard = () => {
   return (
-    <View style={styles.container}>
-      <StartRace />
-      <View style={styles.separator}></View>
-      <LastRace />
-    </View>
+    <>
+      <View style={styles.container}>
+        <StartRace />
+        <View style={styles.separator}></View>
+        <LastRace />
+      </View>
+      <SecondPanel />
+    </>
   );
 };
 
