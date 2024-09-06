@@ -1,60 +1,63 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { Link } from "expo-router";
+import { Link, usePathname } from "expo-router";
 
 const Navbar = () => {
-  const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
+  const pathname = usePathname(); // Récupère l'URL actuelle
 
-  const handlePress = (iconName: string) => {
-    setSelectedIcon(iconName);
+  // Fonction pour obtenir l'icône active en fonction de la route
+  const getActiveIcon = (): string => {
+    if (pathname.startsWith("/dashboard")) {
+      return "home";
+    } else if (pathname.startsWith("/modes")) {
+      return "modes";
+    } else if (pathname.startsWith("/history")) {
+      return "history";
+    } else if (pathname.startsWith("/stats")) {
+      return "stats";
+    }
+    return ""; // Aucun icône actif si aucune des routes n'est matchée
   };
+
+  const activeIcon = getActiveIcon();
 
   return (
     <View style={styles.container}>
       <Link href={"/dashboard"} asChild>
-        <TouchableOpacity onPress={() => handlePress("home")}>
+        <TouchableOpacity>
           <Image
-            source={require("../../components/Navbar/navbarAssets/home.svg")}
-            style={[
-              styles.icon,
-              selectedIcon === "home" && styles.selectedIcon,
-            ]}
+            source={require("../../components/Navbar/navbarAssets/FrameHome.svg")}
+            style={[styles.icon, activeIcon === "home" && styles.selectedIcon]}
           />
         </TouchableOpacity>
       </Link>
 
       <Link href={"/modes"} asChild>
-        <TouchableOpacity onPress={() => handlePress("modes")}>
+        <TouchableOpacity>
           <Image
-            source={require("../../components/Navbar/navbarAssets/voiture.svg")}
-            style={[
-              styles.icon,
-              selectedIcon === "modes" && styles.selectedIcon,
-            ]}
+            source={require("../../components/Navbar/navbarAssets/FrameCar.svg")}
+            style={[styles.icon, activeIcon === "modes" && styles.selectedIcon]}
           />
         </TouchableOpacity>
       </Link>
 
       <Link href={"/history"} asChild>
-        <TouchableOpacity onPress={() => handlePress("history")}>
+        <TouchableOpacity>
           <Image
-            source={require("../../components/Navbar/navbarAssets/historique.svg")}
+            source={require("../../components/Navbar/navbarAssets/FrameHistory.svg")}
             style={[
               styles.icon,
-              selectedIcon === "history" && styles.selectedIcon,
+              activeIcon === "history" && styles.selectedIcon,
             ]}
           />
         </TouchableOpacity>
       </Link>
 
       <Link href={"/stats"} asChild>
-        <TouchableOpacity onPress={() => handlePress("history")}>
+        <TouchableOpacity>
           <Image
-            source={require("../../components/Navbar/navbarAssets/stats.svg")}
-            style={[
-              styles.icon,
-              selectedIcon === "stats" && styles.selectedIcon,
-            ]}
+            source={require("../../components/Navbar/navbarAssets/FrameStats.svg")}
+            style={[styles.icon, activeIcon === "stats" && styles.selectedIcon]}
           />
         </TouchableOpacity>
       </Link>
@@ -81,7 +84,7 @@ const styles = StyleSheet.create({
   },
 
   selectedIcon: {
-    tintColor: "#3B82F6",
+    tintColor: "#3B82F6", // Couleur bleue pour l'icône sélectionnée
   },
 });
 
