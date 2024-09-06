@@ -8,7 +8,7 @@ const StatsPage: React.FC = () => {
 
   return (
     <>
-      <View style={[styles.statsJour, styles.iconLayout]}>
+      <View style={[styles.container, styles.iconLayout]}>
         <View style={styles.frameParent}>
           {/* Redirection lors du clic sur l'image */}
           <Pressable
@@ -21,10 +21,10 @@ const StatsPage: React.FC = () => {
               source={require("../../assets/images/flèche.png")} // Utilisation de require pour les images locales
             />
           </Pressable>
-          <View style={styles.statistiquesParent}>
-            <Text style={styles.statistiques}>Statistiques</Text>
-            <Text style={styles.retrouverVosCourses}>
-              Retrouver vos courses ici et leurs statistiques
+          <View style={styles.statsContainer}>
+            <Text style={styles.statsTitle}>Statistiques</Text>
+            <Text style={styles.statsSubtitle}>
+              Retrouvez vos courses ici et leurs statistiques
             </Text>
           </View>
           <View style={[styles.frameGroup, styles.inputFlexBox]}></View>
@@ -35,7 +35,7 @@ const StatsPage: React.FC = () => {
             <Text style={[styles.vitesseMs, styles.vitesseMsPosition]}>
               Vitesse (m/s)
             </Text>
-            <View style={styles.frameView}>
+            <View style={styles.dateButton}>
               <View style={[styles.jourWrapper, styles.wrapperFlexBox]}>
                 <Text style={[styles.jour, styles.jourTypo]}>Jour</Text>
               </View>
@@ -112,28 +112,88 @@ const StatsPage: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#F1F5F9",
+    height: 926,
+    paddingHorizontal: 24,
+    paddingTop: 56,
+    paddingBottom: 150,
+    gap: 32,
+    alignItems: "center",
+    overflow: "hidden",
+    flex: 1,
+  },
+
+  statsContainer: {
+    gap: 8,
+    flex: 1,
+  },
+
+  statsTitle: {
+    fontSize: 33,
+    color: "#020617",
+    textAlign: "left",
+    fontWeight: "700",
+    alignSelf: "stretch",
+  },
+
+  statsSubtitle: {
+    color: "#64748b",
+    fontSize: 18,
+    textAlign: "left",
+    alignSelf: "stretch",
+  },
+
+  dateButton: {
+    backgroundColor: "#cbd5e1",
+    padding: 4,
+    zIndex: 1,
+    borderRadius: 24,
+    gap: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+
+  jourTypo: {
+    color: "#3b82f6",
+    fontSize: 18,
+    fontWeight: "700",
+  },
+
+  semaine: {
+    textAlign: "left",
+    fontWeight: "700",
+    color: "#1e293b",
+  },
+
   iconLayout: {
     width: "100%",
     overflow: "hidden",
   },
+
   inputFlexBox: {
     gap: 16,
     flexDirection: "row",
   },
+
   tempsSParentFlexBox: {
     justifyContent: "center",
     alignSelf: "stretch",
     alignItems: "center",
   },
+
   tempsSTypo: {
     fontSize: 9,
     textAlign: "center",
     color: "#64748b",
   },
+
   vitesseMsPosition: {
     left: 0,
     position: "absolute",
   },
+
   wrapperFlexBox: {
     padding: 8,
     width: 100,
@@ -142,11 +202,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  jourTypo: {
-    color: "#3b82f6",
-    fontSize: 18,
-    fontWeight: "700",
-  },
+
   mnTypo: {
     color: "#1e293b",
     fontSize: 18,
@@ -155,47 +211,36 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
   },
+
   icon: {
     height: "100%",
     overflow: "hidden",
   },
-  statistiques: {
-    fontSize: 33,
-    color: "#020617",
-    textAlign: "left",
-    fontWeight: "700",
-    alignSelf: "stretch",
-  },
-  retrouverVosCourses: {
-    color: "#64748b",
-    fontSize: 18,
-    textAlign: "left",
-    alignSelf: "stretch",
-  },
-  statistiquesParent: {
-    gap: 8,
-    flex: 1,
-  },
+
   frameChild: {
     borderRadius: 100,
     width: 48,
     height: 48,
     overflow: "hidden",
   },
+
   frameIcon: {
     width: 52,
     height: 52,
     overflow: "hidden",
   },
+
   frameGroup: {
     display: "none",
   },
+
   frameParent: {
     gap: 24,
     flexDirection: "row",
     alignSelf: "stretch",
     alignItems: "center",
   },
+
   tempsS: {
     marginLeft: -19,
     top: 271,
@@ -205,6 +250,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     fontSize: 9,
   },
+
   vitesseMs: {
     marginTop: 25,
     top: "50%",
@@ -219,27 +265,15 @@ const styles = StyleSheet.create({
     color: "#64748b",
     fontFamily: "Helvetica Neue",
   },
+
   jour: {
     textAlign: "left",
   },
+
   jourWrapper: {
     backgroundColor: "#fff",
   },
-  semaine: {
-    textAlign: "left",
-    fontWeight: "700",
-    color: "#1e293b",
-  },
-  frameView: {
-    backgroundColor: "#cbd5e1",
-    padding: 4,
-    zIndex: 1,
-    borderRadius: 24,
-    gap: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    overflow: "hidden",
-  },
+
   frameItem: {
     borderRadius: 4,
     width: 352,
@@ -248,13 +282,16 @@ const styles = StyleSheet.create({
     marginTop: -24,
     overflow: "hidden",
   },
+
   frameIcon1: {
     overflow: "hidden",
   },
+
   frameWrapper: {
     flexDirection: "row",
     alignItems: "center",
   },
+
   text: {
     textAlign: "center",
   },
@@ -322,17 +359,6 @@ const styles = StyleSheet.create({
   frameContainer: {
     borderRadius: 24,
     gap: 24,
-  },
-  statsJour: {
-    backgroundColor: "#f1f5f9",
-    height: 926,
-    paddingHorizontal: 24,
-    paddingTop: 56,
-    paddingBottom: 150,
-    gap: 32,
-    alignItems: "center",
-    overflow: "hidden",
-    flex: 1,
   },
 });
 
