@@ -23,13 +23,13 @@ const Navbar = () => {
         </TouchableOpacity>
       </Link>
 
-      <Link href={"/races"} asChild>
-        <TouchableOpacity onPress={() => handlePress("races")}>
+      <Link href={"/modes"} asChild>
+        <TouchableOpacity onPress={() => handlePress("modes")}>
           <Image
             source={require("../../components/Navbar/navbarAssets/voiture.svg")}
             style={[
               styles.icon,
-              selectedIcon === "races" && styles.selectedIcon,
+              selectedIcon === "modes" && styles.selectedIcon,
             ]}
           />
         </TouchableOpacity>

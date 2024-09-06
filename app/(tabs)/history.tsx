@@ -1,277 +1,245 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  ListRenderItem,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { Image, StyleSheet, Pressable, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import Navbar from "@/components/Navbar/Navbar";
 
-// Définir un type pour les objets `Run`
-interface Run {
-  time: string;
-  distance: string;
-  speed: string;
-}
+const HistoryPage: React.FC = () => {
+  const router = useRouter(); // Hook pour accéder à l'historique
 
-// Définir un type pour les objets `DataItem`
-interface DataItem {
-  date: string;
-  runs: Run[];
-}
+  // État pour gérer l'expansion des blocs
+  const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
-// Définir les types de routes disponibles
-type RootStackParamList = {
-  Home: undefined;
-  Car: undefined;
-  Document: undefined;
-  Stats: undefined;
-  Settings: undefined;
-  History: undefined;
-};
+  // État pour gérer la liste des blocs
+  const [dateCards, setDateCards] = useState([
+    { id: 0, date: "6 juin", metrics: [], badgeCount: 0 },
+    {
+      id: 1,
+      date: "4 juin",
+      metrics: [
+        { label: "Temps", value: "15 mn" },
+        { label: "Distance", value: "4 km" },
+        { label: "Vitesse max", value: "15 km/h" },
+      ],
+      badgeCount: 2,
+    },
+    {
+      id: 2,
+      date: "31 mai",
+      metrics: [
+        { label: "Temps", value: "15 mn" },
+        { label: "Distance", value: "4 km" },
+        { label: "Vitesse max", value: "15 km/h" },
+      ],
+      badgeCount: 5,
+    },
+  ]);
 
-// Créer un tableau de données typé
-const data: DataItem[] = [
-  {
-    date: "6 juin",
-    runs: [],
-  },
-  {
-    date: "4 juin",
-    runs: [
-      { time: "15 mn", distance: "4 km", speed: "15 km/h" },
-      { time: "15 mn", distance: "4 km", speed: "15 km/h" },
-    ],
-  },
-  {
-    date: "31 mai",
-    runs: [],
-  },
-];
-
-export default function HistoryPage() {
-  const [expandedDate, setExpandedDate] = useState<string | null>(null);
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-  const toggleExpand = (date: string) => {
-    setExpandedDate(expandedDate === date ? null : date);
+  const toggleCard = (index: number) => {
+    // Alterner l'état d'expansion pour le bloc cliqué
+    setExpandedCard(expandedCard === index ? null : index);
   };
 
-  const renderItem: ListRenderItem<DataItem> = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <TouchableOpacity
-        onPress={() => toggleExpand(item.date)}
-        style={styles.dateHeader}
-      >
-        <View style={styles.dateRow}>
-          <Ionicons
-            name={
-              expandedDate === item.date
-                ? "chevron-down-outline"
-                : "chevron-forward-outline"
-            }
-            size={20}
-            color="#6B7280"
-          />
-          <Text style={styles.dateText}>{item.date}</Text>
-          {item.runs.length > 0 && (
-            <View style={styles.runCountContainer}>
-              <Text style={styles.runCountText}>{item.runs.length}</Text>
-            </View>
-          )}
+  const handleStatsClick = (id: number) => {
+    // Navigation vers la page des statistiques
+    router.push("/statistiques");
+  };
+
+  const handleDeleteClick = (id: number) => {
+    // Supprimer le bloc
+    setDateCards((prevCards) => prevCards.filter((card) => card.id !== id));
+  };
+
+  return (
+    <>
+      <View style={styles.historique}>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Pressable onPress={() => router.push("/dashboard")}>
+            <Image
+              style={styles.backIcon}
+              resizeMode="cover"
+              source={require("../../assets/images/flèche.png")}
+            />
+          </Pressable>
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.historiqueTitle}>Historique des courses</Text>
+            <Text style={styles.subtitle}>
+              Retrouver vos courses ici et leurs statistiques
+            </Text>
+          </View>
         </View>
-        <View style={styles.iconsContainer}>
-          <Ionicons
-            name="stats-chart-outline"
-            size={24}
-            color="#9C5FFF"
-            style={styles.icon}
-          />
-          <Ionicons
-            name="trash-outline"
-            size={24}
-            color="#FF6B6B"
-            style={styles.icon}
-          />
-        </View>
-      </TouchableOpacity>
-      {expandedDate === item.date && item.runs.length > 0 && (
-        <View style={styles.detailsContainer}>
-          {item.runs.map((run: Run, index: number) => (
-            <View key={index} style={styles.runDetail}>
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Temps</Text>
-                <Text style={styles.detailValue}>{run.time}</Text>
-              </View>
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Distance</Text>
-                <Text style={styles.detailValue}>{run.distance}</Text>
-              </View>
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Vitesse max</Text>
-                <Text style={styles.detailValue}>{run.speed}</Text>
-              </View>
-              {index < item.runs.length - 1 && (
-                <View style={styles.separator} />
+
+        {/* Dates Section */}
+        <View style={styles.dateSection}>
+          {dateCards.map((card) => (
+            <View key={card.id} style={styles.dateCard}>
+              <Pressable
+                style={styles.dateHeader}
+                onPress={() => toggleCard(card.id)}
+              >
+                <View style={styles.dateHeaderLeft}>
+                  <Image
+                    style={styles.iconSmall}
+                    resizeMode="cover"
+                    source={require("../../assets/images/bas.png")}
+                  />
+                  <Text style={styles.dateText}>{card.date}</Text>
+                  {card.badgeCount > 0 && (
+                    <View style={styles.badge}>
+                      <Text style={styles.badgeText}>{card.badgeCount}</Text>
+                    </View>
+                  )}
+                </View>
+                <View style={styles.dateIcons}>
+                  <Pressable onPress={() => handleStatsClick(card.id)}>
+                    <Image
+                      style={styles.iconSmall}
+                      resizeMode="cover"
+                      source={require("../../assets/images/stats.png")}
+                    />
+                  </Pressable>
+                  <Pressable onPress={() => handleDeleteClick(card.id)}>
+                    <Image
+                      style={[styles.iconSmall, styles.iconRight]}
+                      resizeMode="cover"
+                      source={require("../../assets/images/poubelle.png")}
+                    />
+                  </Pressable>
+                </View>
+              </Pressable>
+              {/* Afficher ou masquer les informations en fonction de l'état */}
+              {expandedCard === card.id && card.date !== "6 juin" && (
+                <>
+                  <View style={styles.metrics}>
+                    {card.metrics.map((metric, index) => (
+                      <View key={index} style={styles.metricRow}>
+                        <Text style={styles.metricText}>{metric.label}</Text>
+                        <Text style={styles.metricValue}>{metric.value}</Text>
+                      </View>
+                    ))}
+                  </View>
+
+                  <View style={styles.separator} />
+
+                  <View style={styles.metrics}>
+                    {card.metrics.map((metric, index) => (
+                      <View key={index} style={styles.metricRow}>
+                        <Text style={styles.metricText}>{metric.label}</Text>
+                        <Text style={styles.metricValue}>{metric.value}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </>
               )}
             </View>
           ))}
         </View>
-      )}
-    </View>
-  );
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back-outline" size={24} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Historique des courses</Text>
       </View>
-      <Text style={styles.subtitle}>
-        Retrouver vos courses ici et leurs statistiques
-      </Text>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.date}
-      />
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Ionicons name="home-outline" size={28} color="#9CA3AF" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Car")}>
-          <Ionicons name="car-outline" size={28} color="#9CA3AF" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Document")}>
-          <Ionicons name="document-text-outline" size={28} color="#2563EB" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Stats")}>
-          <Ionicons name="bar-chart-outline" size={28} color="#9CA3AF" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-          <Ionicons name="settings-outline" size={28} color="#9CA3AF" />
-        </TouchableOpacity>
-      </View>
-    </View>
+      <Navbar />
+    </>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
+  historique: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: "#F1F5F9",
+    backgroundColor: "#f1f5f9",
+    paddingHorizontal: 24,
+    paddingTop: 56,
+    paddingBottom: 150,
+    gap: 32,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 20,
+    justifyContent: "flex-start",
   },
-  backButton: {
-    position: "absolute",
-    left: 0,
+  backIcon: {
+    width: 24,
+    height: 24,
   },
-  title: {
+  headerTextContainer: {
     flex: 1,
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#111827",
-    textAlign: "center",
+    paddingHorizontal: 16,
+  },
+  historiqueTitle: {
+    fontSize: 33,
+    color: "#020617",
+    fontWeight: "700",
   },
   subtitle: {
-    fontSize: 14,
-    color: "#6B7280",
-    marginBottom: 16,
-    textAlign: "center",
+    color: "#64748b",
+    fontSize: 18,
   },
-  itemContainer: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    marginVertical: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+  dateSection: {
+    flexDirection: "column",
+    gap: 24,
+  },
+  dateCard: {
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 24,
   },
   dateHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  dateRow: {
+  dateHeaderLeft: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 8,
+  },
+  iconSmall: {
+    width: 24,
+    height: 24,
+  },
+  iconRight: {
+    marginLeft: 10, // Adds space between icons
   },
   dateText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#111827",
-    marginLeft: 8,
+    fontSize: 25,
+    fontWeight: "700",
+    color: "#1e293b",
   },
-  iconsContainer: {
+  badge: {
+    backgroundColor: "#cbd5e1",
+    paddingHorizontal: 8,
+    borderRadius: 8,
+  },
+  badgeText: {
+    fontSize: 17,
+    color: "#1e293b",
+  },
+  dateIcons: {
     flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
-  icon: {
-    marginLeft: 12,
-  },
-  detailsContainer: {
+  metrics: {
     marginTop: 16,
-    paddingTop: 8,
-    borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
+    flexDirection: "column",
+    gap: 16,
   },
-  runDetail: {
-    marginBottom: 16,
-  },
-  detailRow: {
+  metricRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
-  detailLabel: {
-    fontSize: 14,
-    color: "#6B7280",
+  metricText: {
+    fontSize: 18,
+    color: "#1e293b",
   },
-  detailValue: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#111827",
+  metricValue: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#1e293b",
   },
   separator: {
     height: 1,
-    backgroundColor: "#E5E7EB",
-    marginVertical: 8,
-  },
-  runCountContainer: {
-    backgroundColor: "#E5E7EB",
-    borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    marginLeft: 8,
-  },
-  runCountText: {
-    fontSize: 12,
-    color: "#111827",
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    backgroundColor: "#FFFFFF",
-    borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
-    marginTop: 16,
+    backgroundColor: "#e0e0e0",
+    marginVertical: 16,
   },
 });
+
+export default HistoryPage;
