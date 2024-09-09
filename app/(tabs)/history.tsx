@@ -11,23 +11,23 @@ const HistoryPage: React.FC = () => {
 
   // État pour gérer la liste des blocs
   const [dateCards, setDateCards] = useState([
-    { id: 0, date: "6 juin", metrics: [], badgeCount: 0 },
+    { id: 0, date: "6 Juin", metrics: [], badgeCount: 0 },
     {
       id: 1,
-      date: "4 juin",
+      date: "4 Juin",
       metrics: [
-        { label: "Temps", value: "15 mn" },
-        { label: "Distance", value: "4 km" },
+        { label: "Temps", value: "15 min" },
+        { label: "Distance", value: "4km" },
         { label: "Vitesse max", value: "15 km/h" },
       ],
       badgeCount: 2,
     },
     {
       id: 2,
-      date: "31 mai",
+      date: "31 Mai",
       metrics: [
-        { label: "Temps", value: "15 mn" },
-        { label: "Distance", value: "4 km" },
+        { label: "Temps", value: "15 min" },
+        { label: "Distance", value: "4km" },
         { label: "Vitesse max", value: "15 km/h" },
       ],
       badgeCount: 5,
@@ -52,7 +52,6 @@ const HistoryPage: React.FC = () => {
   return (
     <>
       <View style={styles.historique}>
-        {/* Header Section */}
         <View style={styles.header}>
           <Pressable onPress={() => router.push("/dashboard")}>
             <Image
@@ -64,22 +63,21 @@ const HistoryPage: React.FC = () => {
           <View style={styles.headerTextContainer}>
             <Text style={styles.historiqueTitle}>Historique des courses</Text>
             <Text style={styles.subtitle}>
-              Retrouver vos courses ici et leurs statistiques
+              Retrouvez ici vos dernières courses, ainsi que vos statistiques.
             </Text>
           </View>
         </View>
 
-        {/* Dates Section */}
         <View style={styles.dateSection}>
           {dateCards.map((card) => (
             <View key={card.id} style={styles.dateCard}>
               <Pressable
-                style={styles.dateHeader}
+                style={styles.dateHeaderContainer}
                 onPress={() => toggleCard(card.id)}
               >
-                <View style={styles.dateHeaderLeft}>
+                <View style={styles.dateHeader}>
                   <Image
-                    style={styles.iconSmall}
+                    style={styles.icon}
                     resizeMode="cover"
                     source={require("../../assets/images/bas.png")}
                   />
@@ -93,14 +91,14 @@ const HistoryPage: React.FC = () => {
                 <View style={styles.dateIcons}>
                   <Pressable onPress={() => handleStatsClick(card.id)}>
                     <Image
-                      style={styles.iconSmall}
+                      style={styles.icon}
                       resizeMode="cover"
                       source={require("../../assets/images/stats.png")}
                     />
                   </Pressable>
                   <Pressable onPress={() => handleDeleteClick(card.id)}>
                     <Image
-                      style={[styles.iconSmall, styles.iconRight]}
+                      style={styles.icon}
                       resizeMode="cover"
                       source={require("../../assets/images/poubelle.png")}
                     />
@@ -113,7 +111,7 @@ const HistoryPage: React.FC = () => {
                   <View style={styles.metrics}>
                     {card.metrics.map((metric, index) => (
                       <View key={index} style={styles.metricRow}>
-                        <Text style={styles.metricText}>{metric.label}</Text>
+                        <Text style={styles.metricText}>{metric.label} :</Text>
                         <Text style={styles.metricValue}>{metric.value}</Text>
                       </View>
                     ))}
@@ -124,7 +122,7 @@ const HistoryPage: React.FC = () => {
                   <View style={styles.metrics}>
                     {card.metrics.map((metric, index) => (
                       <View key={index} style={styles.metricRow}>
-                        <Text style={styles.metricText}>{metric.label}</Text>
+                        <Text style={styles.metricText}>{metric.label} :</Text>
                         <Text style={styles.metricValue}>{metric.value}</Text>
                       </View>
                     ))}
@@ -149,92 +147,111 @@ const styles = StyleSheet.create({
     paddingBottom: 150,
     gap: 32,
   },
+
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
   },
+
   backIcon: {
     width: 24,
     height: 24,
   },
+
   headerTextContainer: {
     flex: 1,
     paddingHorizontal: 16,
   },
+
   historiqueTitle: {
     fontSize: 33,
     color: "#020617",
     fontWeight: "700",
   },
+
   subtitle: {
     color: "#64748b",
     fontSize: 18,
   },
+
   dateSection: {
     flexDirection: "column",
     gap: 24,
   },
+
   dateCard: {
     backgroundColor: "#fff",
     padding: 16,
     borderRadius: 24,
   },
-  dateHeader: {
+
+  dateHeaderContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    gap: 16,
   },
-  dateHeaderLeft: {
+
+  dateHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
   },
-  iconSmall: {
+
+  icon: {
     width: 24,
     height: 24,
+    marginHorizontal: 2,
   },
-  iconRight: {
-    marginLeft: 10, // Adds space between icons
-  },
+
   dateText: {
     fontSize: 25,
     fontWeight: "700",
     color: "#1e293b",
+    marginHorizontal: 8,
   },
+
   badge: {
     backgroundColor: "#cbd5e1",
     paddingHorizontal: 8,
     borderRadius: 8,
   },
+
   badgeText: {
-    fontSize: 17,
+    fontSize: 18,
     color: "#1e293b",
+    marginVertical: 1,
   },
+
   dateIcons: {
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
   },
+
   metrics: {
-    marginTop: 16,
+    marginVertical: 8,
     flexDirection: "column",
-    gap: 16,
+    gap: 12,
   },
+
   metricRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
+
   metricText: {
     fontSize: 18,
     color: "#1e293b",
   },
+
   metricValue: {
     fontSize: 18,
     fontWeight: "700",
     color: "#1e293b",
   },
+
   separator: {
     height: 1,
     backgroundColor: "#e0e0e0",
