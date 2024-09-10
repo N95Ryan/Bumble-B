@@ -19,12 +19,12 @@ const Bandeau = ({ is_landscape }: { is_landscape: boolean }) => {
     return (
         <View style={[styles.container_bandeau, is_landscape && styles.container_bandeau_landscape]}>
             
-            <TouchableOpacity onPress={handleStop}>
+         <TouchableOpacity onPress={handleStop}>
             <Image 
                 style={styles.icon}
                 source={require("../../assets/images/icon_camera.svg")}
             />
-            /</TouchableOpacity>
+            </TouchableOpacity>
 
             <Text style={styles.time_value}>00:09:11</Text>
             <View style={styles.container_icons}>

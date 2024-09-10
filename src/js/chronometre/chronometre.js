@@ -3,7 +3,9 @@ import { View, Text, StyleSheet } from 'react-native';
 import TimerControls from './TimerControls'; 
 
 const Chronometre = forwardRef((props, ref) => {
+    // On le met a true pour qu'il commence dès que la page est ouverte
     const [isRunning, setIsRunning] = useState(true);
+    // On met le chrono a 0
     const [time, setTime] = useState(0);
     const timeRef = useRef(null);
 
