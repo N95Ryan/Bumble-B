@@ -5,7 +5,7 @@ interface SecondPanelProps {
   races: any[]; // Utilisez un type plus spécifique si possible
 }
 
-const SecondPanel: React.FC<SecondPanelProps> = ({ races }) => {
+const SecondPanel: React.FC<SecondPanelProps> = () => {
   return (
     <View style={styles.container}>
       <View style={styles.carSettings}>

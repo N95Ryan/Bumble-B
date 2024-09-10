@@ -20,8 +20,11 @@ interface LastRaceProps {
 }
 
 const LastRace: React.FC<LastRaceProps> = ({ races }) => {
-  // Exemple d'affichage des données de la dernière course
-  const lastRace = races.length > 0 ? races[0] : null;
+  // Trier les courses par date de création (createdAt) ou par id décroissant pour obtenir la dernière course
+  const sortedRaces = [...races].sort((a, b) => b.id - a.id); // fonction de trie pour l'ajout des courses 
+
+  const lastRace = sortedRaces.length > 0 ? sortedRaces[0] : null; // Récupérer la course la plus récente
+
   const currentDate = new Date().toLocaleDateString();
 
   return (
