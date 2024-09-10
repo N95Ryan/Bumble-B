@@ -5,7 +5,14 @@ const maxSpeed = 4095;
 
 export function calculateDistance(speed, time) {
   // distance = vitesse * temps
-  return speed * time;  // La vitesse est en m/s et le temps en secondes
+  distance = speed * time;  // La vitesse est en m/s et le temps en secondes
+  return distance;
+}
+
+export function calculateAverageSpeed(distance, time) {
+  const averageSpeed = distance / time;
+  console.log(`Vitesse moyenne : ${averageSpeed.toFixed(2)} m/s`);
+  return averageSpeed;
 }
 
 export function handleJoystickMove(dx, dy) {
@@ -37,6 +44,7 @@ export function handleJoystickMove(dx, dy) {
 export function calculSpeedMeterPerSecond(joystickValue) {
   return (joystickValue / maxSpeed) * maxSpeedMeterPerSecond;
 }
+
 
 export function updateSpeed(speedArray) {
   sendCommand(1, speedArray);
