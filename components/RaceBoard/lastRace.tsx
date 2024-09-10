@@ -2,6 +2,19 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 
+// Fonction pour formater la date sans l'heure
+const formatDateWithoutTime = (isoString: string): string => {
+  const date = new Date(isoString);
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long', // Full month name (e.g., "September")
+    day: 'numeric' // Day of the month
+  };
+
+  return date.toLocaleDateString('fr-FR', options); // Format de date en français
+};
+
 interface LastRaceProps {
   races: any[]; // Utilisez un type plus spécifique si possible
 }
@@ -18,7 +31,7 @@ const LastRace: React.FC<LastRaceProps> = ({ races }) => {
         {lastRace ? (
           <>
             <Text style={style.date}>
-              Date : <Text style={style.datas}>{lastRace.createdAt || currentDate}</Text>
+              Date : <Text style={style.datas}>{formatDateWithoutTime(lastRace.createdAt || currentDate)}</Text>
             </Text>
             <Text>
               Temps : <Text style={style.datas}>{lastRace.timeSpent || '15 min'}</Text>
