@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "react-native";
 import RaceBoard from "@/components/RaceBoard/RaceBoard";
+import DisconnectButton from "@/components/Buttons/disconnectButton";
 import Navbar from "@/components/Navbar/Navbar";
 
 // Interface pour le payload JWT
@@ -71,6 +72,7 @@ export default function DashboardPage() {
         <Text style={styles.greeting}>Bonjour {username}</Text>
         <Text style={styles.text}>Lorem ipsum dolor sit amet</Text>
         <RaceBoard />
+        <DisconnectButton />
         <Navbar />
       </View>
     </>
