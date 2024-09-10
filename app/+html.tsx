@@ -20,7 +20,7 @@ export default function Root({ children }: PropsWithChildren) {
         <ScrollViewStyleReset />
 
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
-        <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
+        <style dangerouslySetInnerHTML={{ __html: css_styles }} />
         {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
       <body>{children}</body>
@@ -28,9 +28,15 @@ export default function Root({ children }: PropsWithChildren) {
   );
 }
 
-const responsiveBackground = `
+const css_styles = `
 body {
   background-color: #fff;
+}
+svg text{
+  font: 10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+svg > g > g:nth-child(7) > path{
+  fill: #1E293B !important;
 }
 @media (prefers-color-scheme: dark) {
   body {
