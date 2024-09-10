@@ -1,18 +1,34 @@
-import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-type BandeauProps = {
-    is_landscape: boolean;
-};
-const Bandeau: React.FC<BandeauProps> = ({ is_landscape }) => {
+const Bandeau = ({ is_landscape }: { is_landscape: boolean }) => {
+
+    const [isRunning, setIsRunning] = useState(false);
+    const chronometreRef = useRef<any>(null);
+
+
+    const handleStop = () => {
+        setIsRunning(false);
+        if (chronometreRef.current) {
+            chronometreRef.current.stop();
+        }
+    };
+
+
+
     return (
         <View style={[styles.container_bandeau, is_landscape && styles.container_bandeau_landscape]}>
+            
+         <TouchableOpacity onPress={handleStop}>
             <Image 
                 style={styles.icon}
                 source={require("../../assets/images/icon_camera.svg")}
             />
+            </TouchableOpacity>
+
             <Text style={styles.time_value}>00:09:11</Text>
             <View style={styles.container_icons}>
+                
                 <Image 
                     style={styles.icon}
                     source={require("../../assets/images/icon_photo.svg")}
