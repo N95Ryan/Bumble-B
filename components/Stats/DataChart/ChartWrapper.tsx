@@ -1,58 +1,63 @@
-// ChartWrapper.tsx
 import React, { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
-const ChartWrapper: React.FC = () => {
+interface ChartWrapperProps {
+    data: number[];
+    labels: string[];
+}
+
+const ChartWrapper: React.FC<ChartWrapperProps> = ({ data, labels }) => {
     const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width);
 
     useEffect(() => {
         const updateWidth = () => {
-        const width = Dimensions.get("window").width;
-        setScreenWidth(width);
+            const width = Dimensions.get("window").width;
+            setScreenWidth(width);
         };
 
         const dimensionListener = Dimensions.addEventListener("change", updateWidth);
 
         return () => {
-        dimensionListener.remove();
+            dimensionListener?.remove(); 
         };
     }, []);
 
-    const [data] = useState({
-        labels: ["03:00", "09:00", "15:00", "21:00"],
+    const chartData = {
+        labels: labels,
         datasets: [
             {
-                data: [44, 30, 45, 28],
+                data: data,
             },
         ],
-    });
+    };
 
     return (
         <View style={styles.chartContainer}>
             <LineChart
-                data={data}
+                data={chartData}
                 width={screenWidth - 48}
                 height={220}
+                fromZero={true}
                 chartConfig={{
-                backgroundColor: "#E2E8F0",
-                backgroundGradientFrom: "#E2E8F0",
-                backgroundGradientTo: "#E2E8F0",
-                color: (opacity = 1) => `rgba(30, 41, 59, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(30, 41, 59, ${opacity})`,
-                style: {
-                    borderRadius: 16,
-                },
-                propsForDots: {
-                    r: "0",
-                    strokeWidth: "0",
-                },
-                propsForBackgroundLines: {
-                    strokeWidth: 0,
-                },
-                fillShadowGradient: "#1E293B",
-                fillShadowGradientOpacity: 1,
-                useShadowColorFromDataset: false,
+                    backgroundColor: "#E2E8F0",
+                    backgroundGradientFrom: "#E2E8F0",
+                    backgroundGradientTo: "#E2E8F0",
+                    color: (opacity = 1) => `rgba(30, 41, 59, ${opacity})`,
+                    labelColor: (opacity = 1) => `rgba(30, 41, 59, ${opacity})`,
+                    style: {
+                        borderRadius: 16,
+                    },
+                    propsForDots: {
+                        r: "0",
+                        strokeWidth: "0",
+                    },
+                    propsForBackgroundLines: {
+                        strokeWidth: 0,
+                    },
+                    fillShadowGradient: "#1E293B",
+                    fillShadowGradientOpacity: 1,
+                    useShadowColorFromDataset: false,
                 }}
                 bezier
             />

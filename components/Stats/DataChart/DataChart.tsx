@@ -1,16 +1,54 @@
-// ContainerDataChart.tsx
-import ChartWrapper from "@/components/Stats/DataChart/ChartWrapper";
-import DataChoice from "@/components/Stats/DataChart/DataChoice";
-import DateChoice from "@/components/Stats/DataChart/DateChoice";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import ChartWrapper from "./ChartWrapper";
+import DataChoice from "./DataChoice";
+import DateWrapper from "./DateWrapper";
 
-const ContainerDataChart: React.FC = () => {
+interface DataChartProps {
+    timeSpent: number[];
+    distanceCovered: number[];
+    averageSpeed: number[];
+    wheelRotationSpeed: number[];
+    labels: string[];
+    selectedDate: string;
+}
+
+const DataChart: React.FC<DataChartProps> = ({
+    timeSpent,
+    distanceCovered,
+    averageSpeed,
+    wheelRotationSpeed,
+    labels,
+    selectedDate
+}) => {
+    const [selectedData, setSelectedData] = useState<number[]>([]);
+    const [dataType, setDataType] = useState<string>("timeSpent");
+
+    useEffect(() => {
+        switch (dataType) {
+            case "timeSpent":
+                setSelectedData(timeSpent);
+                break;
+            case "distanceCovered":
+                setSelectedData(distanceCovered);
+                break;
+            case "averageSpeed":
+                setSelectedData(averageSpeed);
+                break;
+            case "wheelRotationSpeed":
+                setSelectedData(wheelRotationSpeed);
+                break;
+            default:
+                setSelectedData(timeSpent);
+                break;
+        }
+    }, [dataType, timeSpent, distanceCovered, averageSpeed, wheelRotationSpeed]);
+
     return (
         <View style={styles.containerDataChart}>
-            <DateChoice />
-            <ChartWrapper />
-            <DataChoice />
+            <ChartWrapper data={selectedData} labels={labels} />
+            <DataChoice onSelectData={setDataType} selectedType={dataType} />
+            <DateWrapper selectedDate={selectedDate}/>
         </View>
     );
 };
@@ -22,4 +60,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ContainerDataChart;
+export default DataChart;

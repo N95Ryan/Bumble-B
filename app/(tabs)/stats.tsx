@@ -1,20 +1,86 @@
+import Navbar from "@/components/Navbar/Navbar";
 import DataChart from "@/components/Stats/DataChart/DataChart";
 import GroupWrapper from "@/components/Stats/GroupWrapper";
 import Header from "@/components/Stats/Header";
-import InputWrapper from "@/components/Stats/InputWrapper";
-import React from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 
 const StatsPage: React.FC = () => {
+  const [timeSpent, setTimeSpent] = useState<number[]>([]);
+  const [distanceCovered, setDistanceCovered] = useState<number[]>([]);
+  const [averageSpeed, setAverageSpeed] = useState<number[]>([]);
+  const [wheelRotationSpeed, setWheelRotationSpeed] = useState<number[]>([]);
+  const [labels, setLabels] = useState<string[]>([]);
+
+  // Define the fixed date here
+  const filterDate = "2024-09-10";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/users/1/races", {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c2VyMiIsImlhdCI6MTcyNTk5NDgyMywiZXhwIjoxNzI2MDgxMjIzfQ.gbiG3jqlGLAShO_THzfJHiCw2H_mUNiB4t29Xz3o4vHvr5QGBawS6aMDefLiKHzB',
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const jsonData = await response.json();
+        const lastSevenEntries = jsonData.slice(-7);
+
+        // Filter data based on the fixed date
+        const filteredEntries = lastSevenEntries.filter((stat: any) => {
+          const date = new Date(stat.createdAt).toISOString().split('T')[0];
+          return date === filterDate;
+        });
+
+        const hours = filteredEntries.map((stat: any) => {
+          const date = new Date(stat.createdAt);
+          const hour = date.getHours().toString().padStart(2, '0');
+          const minutes = date.getMinutes().toString().padStart(2, '0');
+          return `${hour}:${minutes}`;
+        });
+
+        setLabels(hours);
+        setTimeSpent(filteredEntries.map((stat: any) => stat.timeSpent));
+        setDistanceCovered(filteredEntries.map((stat: any) => stat.distanceCovered));
+        setAverageSpeed(filteredEntries.map((stat: any) => stat.averageSpeed));
+        setWheelRotationSpeed(filteredEntries.map((stat: any) => stat.wheelRotationSpeed));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [filterDate]);
+
+
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.wrapper}>
         <Header />
-        <DataChart />
-        <InputWrapper />
-        <GroupWrapper />
+        <DataChart
+          timeSpent={timeSpent}
+          distanceCovered={distanceCovered}
+          averageSpeed={averageSpeed}
+          wheelRotationSpeed={wheelRotationSpeed}
+          labels={labels}
+          selectedDate={filterDate}
+        />
+        <GroupWrapper
+          timeSpent={timeSpent}
+          distanceCovered={distanceCovered}
+          averageSpeed={averageSpeed}
+          wheelRotationSpeed={wheelRotationSpeed}
+        />
       </View>
-    </ScrollView>
+      <Navbar />
+    </View>
   );
 };
 

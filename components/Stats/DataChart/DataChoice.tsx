@@ -1,23 +1,33 @@
-// DataChoice.tsx
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const DataChoice: React.FC = () => {
+interface DataChoiceProps {
+    onSelectData: (type: string) => void;
+    selectedType: string;
+}
+
+const ButtonsChoiceData = [
+    { type: "timeSpent", label: "Temps" },
+    { type: "distanceCovered", label: "D. parc" },
+    { type: "averageSpeed", label: "V. moy" },
+    { type: "wheelRotationSpeed", label: "V. rot" },
+];
+
+const DataChoice: React.FC<DataChoiceProps> = ({ onSelectData, selectedType }) => {
     return (
         <View style={[styles.parentDataFlexBox, styles.tempsSParentFlexBox]}>
             <View style={styles.dateDataButton}>
-                <View style={[styles.wrapperFlexBox, styles.wrapperDataFlexBox, styles.dateDataContainerActive]}>
-                <Text style={[styles.dateDataText, styles.dataText, styles.dateDataActiveText]}>Temps</Text>
-                </View>
-                <View style={[styles.wrapperFlexBox, styles.wrapperDataFlexBox]}>
-                <Text style={[styles.dateDataText, styles.dataText]}>D. parc</Text>
-                </View>
-                <View style={[styles.wrapperFlexBox, styles.wrapperDataFlexBox]}>
-                <Text style={[styles.dateDataText, styles.dataText]}>V. moy</Text>
-                </View>
-                <View style={[styles.wrapperFlexBox, styles.wrapperDataFlexBox]}>
-                <Text style={[styles.dateDataText, styles.dataText]}>V. rot</Text>
-                </View>
+                {ButtonsChoiceData.map(({ type, label }) => (
+                    <TouchableOpacity 
+                    key={type} 
+                    onPress={() => onSelectData(type)} 
+                    style={[styles.wrapperFlexBox, styles.wrapperDataFlexBox, selectedType === type && styles.dateDataContainerActive]}>
+                        <Text 
+                        style={[styles.dateDataText, styles.dataText,selectedType === type && styles.dateDataActiveText]}>
+                        {label}
+                        </Text>
+                    </TouchableOpacity>
+                ))}
             </View>
         </View>
     );
