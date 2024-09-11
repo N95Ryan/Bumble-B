@@ -110,7 +110,11 @@ const Units = ({ is_landscape }: { is_landscape: boolean }) => {
         Stop
         </Text> */}
       </View>
-      <View style={[styles.joystickContainer]}>
+      <View
+        style={
+          is_landscape ? styles.joystickHorizontal : styles.joystickVertical
+        }
+      >
         <Joystick onEmit={handleEmit} is_landscape={is_landscape} />
       </View>
     </>
@@ -139,6 +143,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   units_container_landscape: {
+    width: 250,
     backgroundColor: "rgba(2, 6, 23, 0.6)",
     position: "absolute",
     left: 48,
@@ -146,6 +151,7 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 32,
   },
+
   stopButton: {
     fontSize: 18,
     color: "#FF0000",
@@ -154,11 +160,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderRadius: 5,
   },
-  joystickContainer: {
+
+  joystickVertical: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  joystickHorizontal: {
+    position: "absolute",
+    bottom: 50,
+    right: 50,
   },
 });
 
