@@ -72,7 +72,7 @@ export default function DashboardPage() {
         <Text style={styles.greeting}>Bonjour {username}</Text>
         <Text style={styles.text}>Lorem ipsum dolor sit amet</Text>
         <RaceBoard />
-        <DisconnectButton />
+        {/* <DisconnectButton /> */}
         <Navbar />
       </View>
     </>

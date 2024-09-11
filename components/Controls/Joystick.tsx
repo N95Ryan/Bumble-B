@@ -1,6 +1,9 @@
-import React, { useRef } from 'react';
-import { View, PanResponder, StyleSheet, Animated } from 'react-native';
-import { handleJoystickMove, updateSpeed } from '../../src/js/script_joystick_roues';
+import React, { useRef } from "react";
+import { View, PanResponder, StyleSheet, Animated } from "react-native";
+import {
+  handleJoystickMove,
+  updateSpeed,
+} from "../../src/js/script_joystick_roues";
 
 interface JoystickProps {
   onEmit?: (message: number) => void;
@@ -24,9 +27,9 @@ const Joystick = React.memo(({ onEmit, is_landscape }: JoystickProps) => {
       position.setValue({ x: clampedDx, y: clampedDy });
 
       const speedInMeterPerSecond = handleJoystickMove(clampedDx, clampedDy);
-      console.log('Speed:', speedInMeterPerSecond);
+      console.log("Speed:", speedInMeterPerSecond);
 
-      if (typeof onEmit === 'function') {
+      if (typeof onEmit === "function") {
         onEmit(speedInMeterPerSecond);
       }
     },
@@ -37,10 +40,10 @@ const Joystick = React.memo(({ onEmit, is_landscape }: JoystickProps) => {
         useNativeDriver: false,
       }).start();
 
-      if (typeof onEmit === 'function') {
+      if (typeof onEmit === "function") {
         onEmit(0);
       }
-      updateSpeed([0,0,0,0]);
+      updateSpeed([0, 0, 0, 0]);
     },
   });
 
@@ -48,7 +51,10 @@ const Joystick = React.memo(({ onEmit, is_landscape }: JoystickProps) => {
     <View style={[styles.container, is_landscape && styles.containerLandscape]}>
       <Animated.View
         {...panResponder.panHandlers}
-        style={[styles.joystick, { transform: position.getTranslateTransform() }]}
+        style={[
+          styles.joystick,
+          { transform: position.getTranslateTransform() },
+        ]}
       />
     </View>
   );
@@ -59,10 +65,10 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#ddd',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
+    backgroundColor: "#ddd",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
   },
   containerLandscape: {
     // Custom styles for landscape orientation if needed
@@ -71,7 +77,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#333',
+    backgroundColor: "#333",
   },
 });
 
