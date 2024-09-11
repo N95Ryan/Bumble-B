@@ -8,13 +8,15 @@ import { sendCommand } from '../../src/js/websocket';
 import { activerModeGuide, desactivermodeGuide } from "@/src/js/guidedMode";
 
 export default function ModesPage() {
+
+  // pour empecher que le mode guidé soit toujours activé quand on quitte la page
   desactivermodeGuide();
 
   const [selectedMode, setSelectedMode] = useState<"guided" | "manual" | null>(null);
   const router = useRouter();
 
 
-  
+
   const handlePress = () => {
     if (selectedMode) {
       router.push(`/controls?mode=${selectedMode}`);
