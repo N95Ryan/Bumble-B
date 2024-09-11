@@ -3,8 +3,8 @@ import { View, Text, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "react-native";
 import RaceBoard from "@/components/RaceBoard/RaceBoard";
-import DisconnectButton from "@/components/Buttons/disconnectButton";
 import Navbar from "@/components/Navbar/Navbar";
+import axios from 'axios'; // Assurez-vous d'avoir installé axios avec `npm install axios` ou `yarn add axios`
 
 // Interface pour le payload JWT
 interface JwtPayload {
@@ -39,8 +39,42 @@ function parseJwt(token: string) {
   }
 }
 
-export default function DashboardPage() {
+const getUsersByUsername = async (username: string, token: string) => {
+  try {
+    const response = await axios.get('http://localhost:8080/users', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    console.log('Users Response:', response.data);
+    // Filtrer les utilisateurs par nom d'utilisateur
+    const filteredUsers = response.data.filter((user: any) => user.username === username);
+    console.log('Filtered Users:', filteredUsers);
+    return filteredUsers;
+  } catch (error) {
+    console.error('Get Users Error:', error);
+    return [];
+  }
+};
+
+const getRacesById = async (userId: string, token: string) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/users/${userId}/races`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    console.log('Races Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Get Races Error:', error);
+    return [];
+  }
+};
+
+export default function Dashboard() {
   const [username, setUsername] = useState<string>("");
+  const [races, setRaces] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -52,10 +86,20 @@ export default function DashboardPage() {
           // Décoder le JWT pour extraire le nom d'utilisateur
           const decodedToken = parseJwt(token) as JwtPayload;
           console.log("Payload décodé:", decodedToken);
-          setUsername(decodedToken?.sub || "Inconnu");
+          const userName = decodedToken?.sub || "Inconnu";
+          setUsername(userName);
+
+          // Obtenir l'utilisateur correspondant
+          const users = await getUsersByUsername(userName, token);
+          const user = users[0]; // On suppose qu'il n'y a qu'un seul utilisateur avec ce nom
+          if (user) {
+            // Obtenir les courses de l'utilisateur
+            const userRaces = await getRacesById(user.id, token);
+            setRaces(userRaces);
+          }
         }
       } catch (error) {
-        console.error("Erreur lors de la récupération du token :", error);
+        console.error("Erreur lors de la récupération du token ou des données utilisateur :", error);
       }
     };
 
@@ -63,19 +107,16 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <>
-      <View style={styles.container}>
-        <Image
-          source={require("../../components/RaceBoard/assets/Frame-1.png")}
-          style={{ width: 56, height: 56 }}
-        />
-        <Text style={styles.greeting}>Bonjour {username}</Text>
-        <Text style={styles.text}>Lorem ipsum dolor sit amet</Text>
-        <RaceBoard />
-        <DisconnectButton />
-        <Navbar />
-      </View>
-    </>
+    <View style={styles.container}>
+      <Image
+        source={require("../../components/RaceBoard/assets/Frame-1.png")}
+        style={{ width: 56, height: 56 }}
+      />
+      <Text style={styles.greeting}>Bonjour {username}</Text>
+      <Text style={styles.text}>Lorem ipsum dolor sit amet</Text>
+      <RaceBoard races={races} /> {/* Passez les courses au composant RaceBoard */}
+      <Navbar />
+    </View>
   );
 }
 
@@ -102,13 +143,13 @@ const styles = StyleSheet.create({
     color: "#020617",
     fontSize: 33,
     fontStyle: "normal",
-    fontWeight: 700,
+    fontWeight: "700",
   },
 
   text: {
     color: "#64748B",
     fontSize: 18,
     fontStyle: "normal",
-    fontWeight: 400,
+    fontWeight: "400",
   },
 });
