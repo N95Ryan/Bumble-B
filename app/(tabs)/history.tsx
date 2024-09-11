@@ -41,7 +41,7 @@ const HistoryPage: React.FC = () => {
 
   const handleStatsClick = (id: number) => {
     // Navigation vers la page des statistiques
-    router.push("/statistiques");
+    router.push("/stats");
   };
 
   const handleDeleteClick = (id: number) => {

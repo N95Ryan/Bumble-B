@@ -1,13 +1,13 @@
-import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
 import { Link } from "expo-router";
+import React from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 const StartRace = () => {
   return (
     <View style={styles.container}>
       <View style={styles.startRaceContainer}>
         <Text style={styles.startRaceText}>Démarrer une course</Text>
-        <Link href="/races">
+        <Link href="/modes">
           <Image source={require("../RaceBoard/assets/Frame-19.png")} />
         </Link>
       </View>

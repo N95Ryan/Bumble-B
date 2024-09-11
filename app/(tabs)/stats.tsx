@@ -12,8 +12,7 @@ const StatsPage: React.FC = () => {
   const [wheelRotationSpeed, setWheelRotationSpeed] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
 
-  // Define the fixed date here
-  const filterDate = "2024-09-10";
+  const filterDate = "2024-09-11";
 
   useEffect(() => {
     const fetchData = async () => {
