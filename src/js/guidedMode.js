@@ -60,15 +60,18 @@ export async function obstacleTrouve() {
         if (distance <= 10) {
             // On recule pendant 500ms
             actionObstacleTrouve(reculer, 500);
+            // Si on veut que l'alarme s'active quand il y a un obstacle devant
+            // sendCommand(7, 1);
             console.log("Obstacle détecté à une distance de", distance);
         }
+        // else {
+        //     sendCommand(7,0);
+        // }
         // On vérifie qu'il n'y a pas d'erreur
     } catch (error) {
         console.error("Erreur lors de la détection des obstacles:", error);
     }
 }
-
-
 
 export function activerModeGuide() {
     guidedMode = true;
