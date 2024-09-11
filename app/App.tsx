@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BumbleSplash from './BumbleSplash';
 import HomePage from './(tabs)/home';
 import SignUpPage from './(tabs)/signUp';
+import StatsPage from './(tabs)/stats';
 
 // Création d'un stack navigator pour gérer la navigation entre les écrans
 const Stack = createNativeStackNavigator();
@@ -18,6 +19,7 @@ function App() {
         <Stack.Screen name="Splash" component={BumbleSplash} options={{ headerShown: false }} />
         <Stack.Screen name="Home" component={HomePage} />
         <Stack.Screen name="SignUp" component={SignUpPage} />
+        <Stack.Screen name="Stats" component={StatsPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
