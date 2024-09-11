@@ -1,8 +1,6 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import TimerControls from './TimerControls'; 
-import { calculateAverageSpeed } from '../script_joystick_roues';
-import { calculateDistance } from '../script_joystick_roues';
+
 
 const Chronometre = forwardRef((props, ref) => {
     // On le met a true pour qu'il commence dès que la page est ouverte
@@ -69,12 +67,6 @@ const Chronometre = forwardRef((props, ref) => {
     return (
         <View style={styles.chronometreContainer}>
             <Text style={styles.timeText}>{formatTime()}</Text>
-            <TimerControls
-                onStart={handleStart}
-                onStop={handleStop}
-                onRestart={handleRestart}
-                isRunning={isRunning}
-            />
         </View>
     );
 });

@@ -1,31 +1,34 @@
 import Header from "@/components/Modes/Header";
 import ModeSelector from "@/components/Modes/ModeSelector";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import Navbar from "@/components/Navbar/Navbar";
 import { sendCommand } from '../../src/js/websocket';
+import { activerModeGuide, desactivermodeGuide } from "@/src/js/guidedMode";
 
 export default function ModesPage() {
-  const [selectedMode, setSelectedMode] = useState<"guided" | "manual" | null>(
-    null);
+  desactivermodeGuide();
+
+  const [selectedMode, setSelectedMode] = useState<"guided" | "manual" | null>(null);
   const router = useRouter();
 
+
+  
   const handlePress = () => {
     if (selectedMode) {
       router.push(`/controls?mode=${selectedMode}`);
       modeDeLaVoiture(selectedMode);
-    };
+    }
   };
 
   function modeDeLaVoiture(selectedMode: string) {
-    if (selectedMode == "manual") {
-      sendCommand(10,0);
+    if (selectedMode === "manual") {
+      sendCommand(10, 0);
       console.log("Mode manuel activé");
-    }
-    else if(selectedMode == "guided") {
-      sendCommand(10, 2);
-      console.log("Mode suivi de ligne activé");
+      desactivermodeGuide();
+    } else if(selectedMode === "guided") {
+        activerModeGuide();
     }
   }
 
