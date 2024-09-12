@@ -1,16 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Chronometre from "../../src/js/chronometre/chronometre";
-import {
-  calculateDistance,
-  calculateAverageSpeed,
-} from "../../src/js/script_joystick_roues";
+import { calculateDistance } from "../../src/js/script_joystick_roues";
 import Joystick from "./Joystick";
-
-interface ChronometreType {
-  getTime: () => number;
-  stop: () => void;
-}
+import { calculateAverageSpeed } from "../../src/js/script_joystick_roues";
 
 interface ChronometreType {
   getTime: () => number;
@@ -91,6 +84,8 @@ const Units = ({ is_landscape }: { is_landscape: boolean }) => {
         ]}
       >
         <View style={styles.unit_content}>
+          <Text style={styles.unit_label}>Chronomètre</Text>
+          <Chronometre ref={chronometreRef} />
           <Text style={styles.unit_label}>Vitesse</Text>
           <Text style={styles.unit_value}>{arrondir(vitesse, 2)} m/s</Text>
         </View>
@@ -98,17 +93,6 @@ const Units = ({ is_landscape }: { is_landscape: boolean }) => {
           <Text style={styles.unit_label}>Distance</Text>
           <Text style={styles.unit_value}>{arrondir(totalDistance, 2)} m</Text>
         </View>
-        {/* <View style={styles.unit_content}>
-        <Text style={styles.unit_label}>Vitesse Moyenne</Text>
-        {averageSpeed !== null ? (
-          <Text style={styles.unit_value}>{arrondir(averageSpeed, 2)} m/s</Text>
-        ) : (
-          <Text style={styles.unit_value}>-</Text> // Affiche un tiret si la vitesse moyenne n'est pas encore calculée
-        )}
-      </View> */}
-        {/* <Text onPress={handleStop} style={styles.stopButton}>
-        Stop
-        </Text> */}
       </View>
       <View
         style={
@@ -116,6 +100,13 @@ const Units = ({ is_landscape }: { is_landscape: boolean }) => {
         }
       >
         <Joystick onEmit={handleEmit} is_landscape={is_landscape} />
+      </View>
+      <View
+        style={
+          is_landscape ? styles.stopButtonHorizontal : styles.stopButtonVertical
+        }
+      >
+        <TouchableOpacity onPress={handleStop}>STOP</TouchableOpacity>
       </View>
     </>
   );
@@ -143,22 +134,13 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   units_container_landscape: {
-    width: 250,
+    width: 200,
     backgroundColor: "rgba(2, 6, 23, 0.6)",
     position: "absolute",
     left: 48,
     bottom: 24,
     padding: 24,
     borderRadius: 32,
-  },
-
-  stopButton: {
-    fontSize: 18,
-    color: "#FF0000",
-    padding: 10,
-    backgroundColor: "#333333",
-    textAlign: "center",
-    borderRadius: 5,
   },
 
   joystickVertical: {
@@ -172,6 +154,36 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 50,
     right: 50,
+  },
+  stopButtonHorizontal: {
+    top: 150,
+    width: 50,
+    height: 25,
+    paddingHorizontal: 52,
+    paddingVertical: 26,
+    backgroundColor: "#cf142b",
+    color: "#FFFFFF",
+    borderRadius: 6,
+    fontSize: 22,
+    fontFamily: "Roboto",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  stopButtonVertical: {
+    display: "flex",
+    flexDirection: "column",
+    width: 50,
+    height: 25,
+    paddingHorizontal: 26,
+    paddingVertical: 26,
+    backgroundColor: "#cf142b",
+    color: "#FFFFFF",
+    borderRadius: 6,
+    fontSize: 14,
+    fontFamily: "Roboto",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

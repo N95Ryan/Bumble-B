@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import Chronometre from "../../src/js/chronometre/chronometre";
 
 const Bandeau = ({ is_landscape }: { is_landscape: boolean }) => {
   const [isRunning, setIsRunning] = useState(false);
@@ -14,31 +13,25 @@ const Bandeau = ({ is_landscape }: { is_landscape: boolean }) => {
   };
 
   return (
-    <View
-      style={[
-        styles.container_bandeau,
-        is_landscape && styles.container_bandeau_landscape,
-      ]}
-    >
-      <TouchableOpacity onPress={handleStop}>
-        <Image
-          style={styles.icon}
-          source={require("../../assets/images/icon_camera.svg")}
-        />
-      </TouchableOpacity>
-      <Chronometre ref={chronometreRef} isRunning={isRunning} />
-
-      <View style={styles.container_icons}>
-        <Image
-          style={styles.icon}
-          source={require("../../assets/images/icon_photo.svg")}
-        />
-        <Image
-          style={styles.icon}
-          source={require("../../assets/images/icon_rotate.svg")}
-        />
+    <>
+      <View
+        style={[
+          styles.container_bandeau,
+          is_landscape && styles.container_bandeau_landscape,
+        ]}
+      >
+        <View style={styles.container_icons}>
+          <Image
+            style={styles.icon}
+            source={require("../../assets/images/icon_photo.svg")}
+          />
+          <Image
+            style={styles.icon}
+            source={require("../../assets/images/icon_rotate.svg")}
+          />
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
@@ -75,6 +68,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 32,
     width: "auto",
+  },
+  stopButton: {
+    width: 50,
+    height: 25,
+    paddingHorizontal: 18,
+    backgroundColor: "#cf142b",
+    color: "#FFFFFF",
+    borderRadius: 6,
+    fontFamily: "Roboto",
+    fontSize: 16,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
