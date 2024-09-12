@@ -20,7 +20,7 @@ const StatsPage: React.FC = () => {
         const response = await fetch("http://localhost:8080/users/1/races", {
           method: 'GET',
           headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c2VyMiIsImlhdCI6MTcyNTk5NDgyMywiZXhwIjoxNzI2MDgxMjIzfQ.gbiG3jqlGLAShO_THzfJHiCw2H_mUNiB4t29Xz3o4vHvr5QGBawS6aMDefLiKHzB',
+            'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJKRCIsImlhdCI6MTcyNjEzMTM0NywiZXhwIjoxNzI2MjE3NzQ3fQ.BXevvVDy45dFshrMweUb_thSFb76Fma-vjAbnkse_wEWBUIdlHQwDHuORgRVZpVC',
             'Content-Type': 'application/json'
           }
         });
