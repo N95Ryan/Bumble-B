@@ -4,15 +4,20 @@ import StartRace from "./startRace";
 import LastRace from "./lastRace";
 import SecondPanel from "./secondPanel";
 
-const RaceBoard = () => {
+// Définir l'interface pour les props
+interface RaceBoardProps {
+  races: any[]; // Utilisez un type plus spécifique si possible
+}
+
+const RaceBoard: React.FC<RaceBoardProps> = ({ races }) => {
   return (
     <>
       <View style={styles.container}>
         <StartRace />
         <View style={styles.separator}></View>
-        <LastRace />
+        <LastRace races={races} /> {/* Passer les courses si nécessaire */}
       </View>
-      <SecondPanel />
+      <SecondPanel races={races} /> {/* Passer les courses si nécessaire */}
     </>
   );
 };

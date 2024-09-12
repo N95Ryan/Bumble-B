@@ -1,8 +1,11 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
-import { StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 
-const SecondPanel = () => {
+interface SecondPanelProps {
+  races: any[]; // Utilisez un type plus spécifique si possible
+}
+
+const SecondPanel: React.FC<SecondPanelProps> = () => {
   return (
     <View style={styles.container}>
       <View style={styles.carSettings}>
@@ -17,8 +20,6 @@ const SecondPanel = () => {
     </View>
   );
 };
-
-export default SecondPanel;
 
 const styles = StyleSheet.create({
   container: {
@@ -64,7 +65,14 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontStyle: "normal",
-    fontWeight: 400,
+    fontWeight: "400",
     color: "#1E293B",
   },
+
+  raceSummary: {
+    marginTop: 16,
+    alignItems: "center",
+  },
 });
+
+export default SecondPanel;
