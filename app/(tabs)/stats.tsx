@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { format } from 'date-fns';
+import { format } from 'date-fns'; // Ajoute ce module si ce n'est pas encore fait
 import { useLocalSearchParams } from "expo-router";
 
 interface Race {
@@ -81,7 +81,7 @@ const getRacesById = async (userId: string, token: string) => {
 const StatsPage: React.FC = () => {
   const { date } = useLocalSearchParams();
   const initialDate = Array.isArray(date) ? date[0] : date || "";
-  const [filterDate] = useState<string>(initialDate);
+  const [filterDate, setFilterDate] = useState<string>(initialDate || format(new Date(), 'yyyy-MM-dd'));
   const [timeSpent, setTimeSpent] = useState<number[]>([]);
   const [distanceCovered, setDistanceCovered] = useState<number[]>([]);
   const [averageSpeed, setAverageSpeed] = useState<number[]>([]);
@@ -127,9 +127,7 @@ const StatsPage: React.FC = () => {
       }
     };
 
-    if (filterDate) {
-      fetchData();
-    }
+    fetchData();
   }, [filterDate]);
 
   return (
