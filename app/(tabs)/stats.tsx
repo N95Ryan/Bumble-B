@@ -4,15 +4,84 @@ import GroupWrapper from "@/components/Stats/GroupWrapper";
 import Header from "@/components/Stats/Header";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router"; // Remplacer useSearchParams par useLocalSearchParams
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { format } from 'date-fns';
+import { useLocalSearchParams } from "expo-router";
+
+interface Race {
+  createdAt: string;
+  timeSpent: number;
+  distanceCovered: number;
+  averageSpeed: number;
+  wheelRotationSpeed: number;
+}
+
+interface JwtPayload {
+  sub?: string; // Utiliser 'sub' comme clé si c'est la clé de votre nom d'utilisateur
+}
+
+// Fonction pour décoder le token JWT
+const parseJwt = (token: string): JwtPayload | null => {
+  try {
+    const base64Url = token.split(".")[1];
+    if (!base64Url) {
+      throw new Error("Invalid token format");
+    }
+
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = atob(base64);
+
+    // Ajout du support pour UTF-8
+    const decoded = decodeURIComponent(
+      jsonPayload
+        .split("")
+        .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+
+    return JSON.parse(decoded);
+  } catch (error) {
+    console.error("Erreur lors du décodage du JWT :", error);
+    return null;
+  }
+};
+
+// Fonction pour obtenir les utilisateurs par nom d'utilisateur
+const getUsersByUsername = async (username: string, token: string) => {
+  try {
+    const response = await axios.get('http://localhost:8080/users', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const filteredUsers = response.data.filter((user: any) => user.username === username);
+    return filteredUsers;
+  } catch (error) {
+    console.error('Get Users Error:', error);
+    return [];
+  }
+};
+
+// Fonction pour obtenir les courses d'un utilisateur par ID
+const getRacesById = async (userId: string, token: string) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/users/${userId}/races`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Get Races Error:', error);
+    return [];
+  }
+};
 
 const StatsPage: React.FC = () => {
-  const { date } = useLocalSearchParams(); // Utiliser useLocalSearchParams à la place
-
-  // Vérification pour s'assurer que `date` est bien une chaîne de caractères
-  const initialDate = Array.isArray(date) ? date[0] : date || ""; // Si `date` est un tableau, on prend le premier élément
-
-  const [filterDate, setFilterDate] = useState<string>(initialDate); // Initialise avec la date reçue
+  const { date } = useLocalSearchParams();
+  const initialDate = Array.isArray(date) ? date[0] : date || "";
+  const [filterDate] = useState<string>(initialDate);
   const [timeSpent, setTimeSpent] = useState<number[]>([]);
   const [distanceCovered, setDistanceCovered] = useState<number[]>([]);
   const [averageSpeed, setAverageSpeed] = useState<number[]>([]);
@@ -22,45 +91,43 @@ const StatsPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/users/1/races", {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJKRCIsImlhdCI6MTcyNjE1MDM5MCwiZXhwIjoxNzI2MjM2NzkwfQ.bVplvMVUMjbcn0wP5QQPVFJyn8N8rvOL9hytQIOo4wyOEEAglrKiaaQpZy-7_nlC',
-            'Content-Type': 'application/json'
+        const token = await AsyncStorage.getItem("jwt_token");
+        if (token) {
+          const decodedToken = parseJwt(token);
+          const userName = decodedToken?.sub || "";
+          const users = await getUsersByUsername(userName, token);
+          const user = users[0];
+          
+          if (user) {
+            const races = await getRacesById(user.id, token);
+            const lastSevenEntries = races.slice(-7);
+
+            // Filtrer les données en fonction de la date sélectionnée
+            const filteredEntries = lastSevenEntries.filter((stat: Race) => {
+              const date = new Date(stat.createdAt).toISOString().split('T')[0];
+              return date === filterDate;
+            });
+
+            const hours = filteredEntries.map((stat: Race) => {
+              const date = new Date(stat.createdAt);
+              const hour = date.getHours().toString().padStart(2, '0');
+              const minutes = date.getMinutes().toString().padStart(2, '0');
+              return `${hour}:${minutes}`;
+            });
+
+            setLabels(hours);
+            setTimeSpent(filteredEntries.map((stat: Race) => stat.timeSpent));
+            setDistanceCovered(filteredEntries.map((stat: Race) => stat.distanceCovered));
+            setAverageSpeed(filteredEntries.map((stat: Race) => stat.averageSpeed));
+            setWheelRotationSpeed(filteredEntries.map((stat: Race) => stat.wheelRotationSpeed));
           }
-        });
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
         }
-
-        const jsonData = await response.json();
-        const lastSevenEntries = jsonData.slice(-7);
-
-        // Filtrer les données en fonction de la date sélectionnée
-        const filteredEntries = lastSevenEntries.filter((stat: any) => {
-          const date = new Date(stat.createdAt).toISOString().split('T')[0];
-          return date === filterDate;
-        });
-
-        const hours = filteredEntries.map((stat: any) => {
-          const date = new Date(stat.createdAt);
-          const hour = date.getHours().toString().padStart(2, '0');
-          const minutes = date.getMinutes().toString().padStart(2, '0');
-          return `${hour}:${minutes}`;
-        });
-
-        setLabels(hours);
-        setTimeSpent(filteredEntries.map((stat: any) => stat.timeSpent));
-        setDistanceCovered(filteredEntries.map((stat: any) => stat.distanceCovered));
-        setAverageSpeed(filteredEntries.map((stat: any) => stat.averageSpeed));
-        setWheelRotationSpeed(filteredEntries.map((stat: any) => stat.wheelRotationSpeed));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    if (filterDate) { // Assurez-vous que filterDate est défini avant d'appeler fetchData
+    if (filterDate) {
       fetchData();
     }
   }, [filterDate]);
