@@ -1,77 +1,59 @@
-// src/js/websocketController.ts
-
 // Adresse du serveur WebSocket
 export const gateway = typeof window !== 'undefined' 
   ? `ws://172.20.10.3/ws` 
   : '';
 
-export let websocket: WebSocket | null = null;
+export let websocket = null;
 let reconnectAttempts = 0;
 const maxReconnectAttempts = 10;
-let pingInterval: NodeJS.Timeout | null = null; // Intervalle pour ping
 
 // Initialisation du serveur WebSocket
 export function initWebSocket() {
   if (gateway) {
-    console.log('Trying to open a WebSocket connection...');
+    console.log("Connexion...");
     websocket = new WebSocket(gateway);
 
     websocket.onopen = onOpen;
     websocket.onclose = onClose;
     websocket.onerror = onError; // Gère les erreurs WebSocket
-  } else {
-    console.log('WebSocket initialization skipped - not running in a browser environment.');
+  }
+  else {
+    console.log("Erreur lors de l'initialisation du websocket")
   }
 }
 
-// Callback lorsque la connexion est ouverte
-function onOpen(event: Event) {
-  console.log('Connection opened');
-  reconnectAttempts = 0; // Réinitialise les tentatives de reconnexion
 
-  // Démarre l'envoi de ping pour garder la connexion active
-  if (!pingInterval) {
-    pingInterval = setInterval(() => {
-      if (websocket && websocket.readyState === WebSocket.OPEN) {
-        websocket.send(JSON.stringify({ cmd: 'ping' }));
-        console.log('Ping sent to server');
-      }
-    }, 30000); // Envoie un ping toutes les 30 secondes
-  }
+// Callback lorsque la connexion est ouverte
+function onOpen(event) {
+  console.log('Connexion établie');
+  reconnectAttempts = 0; // Réinitialise les tentatives de reconnexion
 }
 
 // Callback lorsque la connexion est fermée
-function onClose(event: Event) {
-  console.log('Connection closed');
-
-  // Arrête l'envoi des pings
-  if (pingInterval) {
-    clearInterval(pingInterval);
-    pingInterval = null;
-  }
+function onClose(event) {
+  console.log('Connection fermé');
 
   // Reconnecte automatiquement si le nombre max de tentatives n'est pas atteint
   if (reconnectAttempts < maxReconnectAttempts) {
     reconnectAttempts++;
-    console.log(`Reconnecting... Attempt ${reconnectAttempts}`);
+    console.log(`Tentative de reconnexion...`);
     setTimeout(initWebSocket, 2000);
   } else {
-    console.error('Max reconnect attempts reached. Giving up.');
+    console.error('Maximum de tentative de connexion atteinte.');
   }
 }
 
 // Callback en cas d'erreur WebSocket
-function onError(event: Event) {
+function onError(event) {
   console.error('WebSocket error:', event);
 }
 
 // Fonction pour envoyer des commandes via WebSocket
-export function sendCommand(cmd: number, data: any) {
+export function sendCommand(cmd, data) {
   if (websocket && websocket.readyState === WebSocket.OPEN) {
     const command = { cmd, data };
     websocket.send(JSON.stringify(command));
-    console.log('Command sent:', command);
   } else {
-    console.error('WebSocket is not open or initialized.');
+    console.error('Erreur. Websocket non initialisé.');
   }
 }

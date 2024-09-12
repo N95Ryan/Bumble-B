@@ -1,9 +1,10 @@
 import { sendCommand} from "./websocket";
+
 let intervalId = null; // Variable pour stocker l'identifiant d'intervalle
 export let guidedMode = false;
 
-// Toutes les O,5s on active le mode suivi pour que les capteurs se mettent bien a jour
-// et on actualise les valeurs de recupererSonar()
+// Toutes les O,5s on active le mode suivi pour que les capteurs se mettent bien à jour
+// et on actualise les valeurs du sonar
 export function modeGuide() {
     if (guidedMode && !intervalId) {
         intervalId = setInterval(() => {
@@ -11,11 +12,10 @@ export function modeGuide() {
             obstacleTrouve();
             // Pour que les capteurs se mettent bien a jour, on envoi la commande toutes les 500ms
             sendCommand(10, 1);
-            console.log("Mode suivi de ligne actualisé");
+            // On définit l'interval en milisecondes
         }, 500);
     }
 }
-
 
 export function desactivermodeGuide() {
     guidedMode = false;
@@ -25,6 +25,7 @@ export function desactivermodeGuide() {
     }
 }
 
+// Définit une action a effectuer pendant un certain temps
 export function actionObstacleTrouve(reculer, duration) {
     const interval = 100; // Exécute toutes les 100 millisecondes
     let elapsedTime = 0;
@@ -41,7 +42,7 @@ export function actionObstacleTrouve(reculer, duration) {
 
 
 export async function obstacleTrouve() {
-    // On récupere les valeurs du sonar
+    // On récupere les valeurs du sonar pendant tout le trajet
     try {
         const response = await fetch("http://172.20.10.3/track");
         if (!response.ok) {
@@ -51,22 +52,23 @@ export async function obstacleTrouve() {
         // valeur du sonar
         const distance = data.distance;
 
-        // on créer une action a faire quand la voiture rencontre un obstacle
+        // Création de la fonction qui permet à la voiture de reculer
         function reculer() {
             sendCommand(1, [-1000, -1000, -1000, -1000]); 
         }
 
-        // On effectue une action quand la valeur de la distance du sonar est inférieur ou égale a 10
+        // On effectue une action quand la valeur de la distance du sonar est inférieur ou égale a 10 (centimètres)
         if (distance <= 10) {
-            // On recule pendant 500ms
+            // On recule pendant 500ms (0,5s)
             actionObstacleTrouve(reculer, 500);
+
             // Si on veut que l'alarme s'active quand il y a un obstacle devant
             // sendCommand(7, 1);
-            console.log("Obstacle détecté à une distance de", distance);
         }
         // else {
         //     sendCommand(7,0);
         // }
+        
         // On vérifie qu'il n'y a pas d'erreur
     } catch (error) {
         console.error("Erreur lors de la détection des obstacles:", error);

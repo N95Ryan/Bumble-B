@@ -1,6 +1,5 @@
 import Bandeau from '@/components/Controls/Bandeau';
 import Image from '@/components/Controls/Camera';
-import Joystick from '@/components/Controls/Joystick';
 import Units from '@/components/Controls/Units';
 import React from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
