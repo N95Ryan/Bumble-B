@@ -4,15 +4,20 @@ import GroupWrapper from "@/components/Stats/GroupWrapper";
 import Header from "@/components/Stats/Header";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router"; // Remplacer useSearchParams par useLocalSearchParams
 
 const StatsPage: React.FC = () => {
+  const { date } = useLocalSearchParams(); // Utiliser useLocalSearchParams à la place
+
+  // Vérification pour s'assurer que `date` est bien une chaîne de caractères
+  const initialDate = Array.isArray(date) ? date[0] : date || ""; // Si `date` est un tableau, on prend le premier élément
+
+  const [filterDate, setFilterDate] = useState<string>(initialDate); // Initialise avec la date reçue
   const [timeSpent, setTimeSpent] = useState<number[]>([]);
   const [distanceCovered, setDistanceCovered] = useState<number[]>([]);
   const [averageSpeed, setAverageSpeed] = useState<number[]>([]);
   const [wheelRotationSpeed, setWheelRotationSpeed] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
-
-  const filterDate = "2024-09-11";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +37,7 @@ const StatsPage: React.FC = () => {
         const jsonData = await response.json();
         const lastSevenEntries = jsonData.slice(-7);
 
-        // Filter data based on the fixed date
+        // Filtrer les données en fonction de la date sélectionnée
         const filteredEntries = lastSevenEntries.filter((stat: any) => {
           const date = new Date(stat.createdAt).toISOString().split('T')[0];
           return date === filterDate;
@@ -55,9 +60,10 @@ const StatsPage: React.FC = () => {
       }
     };
 
-    fetchData();
+    if (filterDate) { // Assurez-vous que filterDate est défini avant d'appeler fetchData
+      fetchData();
+    }
   }, [filterDate]);
-
 
   return (
     <View style={styles.container}>

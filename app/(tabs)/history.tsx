@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Navbar from "@/components/Navbar/Navbar";
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 // Interface pour les métriques et les courses
@@ -165,8 +165,12 @@ const HistoryPage: React.FC = () => {
   };
 
   const handleStatsClick = (id: number, date: string) => {
+    // Utiliser 'parse' pour analyser la date du format "d MMMM" au format de date complet
+    const parsedDate = parse(date, 'd MMMM', new Date(), { locale: fr });
+    
     // Formater la date au format ISO pour la passer à StatsPage
-    const isoDate = format(new Date(date), 'yyyy-MM-dd'); 
+    const isoDate = format(parsedDate, 'yyyy-MM-dd'); 
+    
     // Naviguer vers la page des statistiques en passant la date comme paramètre
     router.push({
       pathname: "/stats",
@@ -256,7 +260,6 @@ const HistoryPage: React.FC = () => {
     </>
   );
 };
-
 
 const styles = StyleSheet.create({
   historique: {
