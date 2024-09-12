@@ -4,7 +4,6 @@ import GroupWrapper from "@/components/Stats/GroupWrapper";
 import Header from "@/components/Stats/Header";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { useLocalSearchParams } from "expo-router"; // Import correct pour récupérer les paramètres de navigation
 
 const StatsPage: React.FC = () => {
   const [timeSpent, setTimeSpent] = useState<number[]>([]);
@@ -13,11 +12,7 @@ const StatsPage: React.FC = () => {
   const [wheelRotationSpeed, setWheelRotationSpeed] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
 
-  // Récupérer la date envoyée depuis HistoryPage
-  const { date } = useLocalSearchParams();
-
-  // Si `date` est un tableau, utiliser le premier élément, sinon utiliser la valeur directement
-  const filterDate = Array.isArray(date) ? date[0] : date || "2024-09-11";
+  const filterDate = "2024-09-11";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,7 +20,7 @@ const StatsPage: React.FC = () => {
         const response = await fetch("http://localhost:8080/users/1/races", {
           method: 'GET',
           headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c2VyMiIsImlhdCI6MTcyNTk5NDgyMywiZXhwIjoxNzI2MDgxMjIzfQ.gbiG3jqlGLAShO_THzfJHiCw2H_mUNiB4t29Xz3o4vHvr5QGBawS6aMDefLiKHzB',
+            'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJKRCIsImlhdCI6MTcyNjE1MDM5MCwiZXhwIjoxNzI2MjM2NzkwfQ.bVplvMVUMjbcn0wP5QQPVFJyn8N8rvOL9hytQIOo4wyOEEAglrKiaaQpZy-7_nlC',
             'Content-Type': 'application/json'
           }
         });
@@ -37,10 +32,10 @@ const StatsPage: React.FC = () => {
         const jsonData = await response.json();
         const lastSevenEntries = jsonData.slice(-7);
 
-        // Filtrer les données en fonction de la date passée
+        // Filter data based on the fixed date
         const filteredEntries = lastSevenEntries.filter((stat: any) => {
-          const statDate = new Date(stat.createdAt).toISOString().split('T')[0];
-          return statDate === filterDate;
+          const date = new Date(stat.createdAt).toISOString().split('T')[0];
+          return date === filterDate;
         });
 
         const hours = filteredEntries.map((stat: any) => {
@@ -50,7 +45,6 @@ const StatsPage: React.FC = () => {
           return `${hour}:${minutes}`;
         });
 
-        // Mettre à jour les états avec les données filtrées
         setLabels(hours);
         setTimeSpent(filteredEntries.map((stat: any) => stat.timeSpent));
         setDistanceCovered(filteredEntries.map((stat: any) => stat.distanceCovered));
@@ -62,7 +56,8 @@ const StatsPage: React.FC = () => {
     };
 
     fetchData();
-  }, [filterDate]); // Réexécute l'effet lorsque filterDate change
+  }, [filterDate]);
+
 
   return (
     <View style={styles.container}>
@@ -74,7 +69,7 @@ const StatsPage: React.FC = () => {
           averageSpeed={averageSpeed}
           wheelRotationSpeed={wheelRotationSpeed}
           labels={labels}
-          selectedDate={filterDate} // Passer la date sélectionnée
+          selectedDate={filterDate}
         />
         <GroupWrapper
           timeSpent={timeSpent}
