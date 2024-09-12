@@ -1,51 +1,180 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Image, StyleSheet, Pressable, Text, View } from "react-native";
 import { useRouter } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import Navbar from "@/components/Navbar/Navbar";
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
+
+// Interface pour les métriques et les courses
+interface Metric {
+  label: string;
+  value: string;
+}
+
+interface Race {
+  createdAt: string;
+  timeSpent: number;
+  distanceCovered: number;
+  averageSpeed: number;
+  maxSpeed?: number;
+}
+
+interface DateCard {
+  id: number;
+  date: string;
+  metrics: Metric[];
+  badgeCount: number;
+}
+
+// Interface pour le payload JWT
+interface JwtPayload {
+  sub?: string; // Utiliser 'sub' comme clé si c'est la clé de votre nom d'utilisateur
+}
+
+// Fonction pour décoder le token JWT
+function parseJwt(token: string) {
+  try {
+    const base64Url = token.split(".")[1];
+    if (!base64Url) {
+      throw new Error("Invalid token format");
+    }
+
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = atob(base64);
+
+    // Ajout du support pour UTF-8
+    const decoded = decodeURIComponent(
+      jsonPayload
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
+
+    return JSON.parse(decoded);
+  } catch (error) {
+    console.error("Erreur lors du décodage du JWT :", error);
+    return null;
+  }
+}
+
+// Fonction pour obtenir les utilisateurs par nom d'utilisateur
+const getUsersByUsername = async (username: string, token: string) => {
+  try {
+    const response = await axios.get('http://localhost:8080/users', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    console.log('Users Response:', response.data);
+    // Filtrer les utilisateurs par nom d'utilisateur
+    const filteredUsers = response.data.filter((user: any) => user.username === username);
+    console.log('Filtered Users:', filteredUsers);
+    return filteredUsers;
+  } catch (error) {
+    console.error('Get Users Error:', error);
+    return [];
+  }
+};
+
+// Fonction pour obtenir les courses d'un utilisateur par ID
+const getRacesById = async (userId: string, token: string) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/users/${userId}/races`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    console.log('Races Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Get Races Error:', error);
+    return [];
+  }
+};
 
 const HistoryPage: React.FC = () => {
-  const router = useRouter(); // Hook pour accéder à l'historique
-
-  // État pour gérer l'expansion des blocs
+  const router = useRouter();
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
+  const [dateCards, setDateCards] = useState<DateCard[]>([]);
+  const [username, setUsername] = useState<string>("");
 
-  // État pour gérer la liste des blocs
-  const [dateCards, setDateCards] = useState([
-    { id: 0, date: "6 Juin", metrics: [], badgeCount: 0 },
-    {
-      id: 1,
-      date: "4 Juin",
-      metrics: [
-        { label: "Temps", value: "15 min" },
-        { label: "Distance", value: "4km" },
-        { label: "Vitesse max", value: "15 km/h" },
-      ],
-      badgeCount: 2,
-    },
-    {
-      id: 2,
-      date: "31 Mai",
-      metrics: [
-        { label: "Temps", value: "15 min" },
-        { label: "Distance", value: "4km" },
-        { label: "Vitesse max", value: "15 km/h" },
-      ],
-      badgeCount: 5,
-    },
-  ]);
+  // Fonction pour récupérer les données d'historique des courses
+  const fetchHistoryData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("jwt_token");
+      console.log("Token récupéré depuis AsyncStorage:", token);
+
+      if (token) {
+        // Décoder le token JWT pour extraire le nom d'utilisateur
+        const decodedToken = parseJwt(token) as JwtPayload;
+        const userName = decodedToken?.sub || "Inconnu";
+        setUsername(userName);
+
+        // Obtenir l'utilisateur correspondant
+        const users = await getUsersByUsername(userName, token);
+        const user = users[0]; // On suppose qu'il n'y a qu'un seul utilisateur avec ce nom
+
+        if (user) {
+          // Obtenir les courses de l'utilisateur
+          const userRaces: Race[] = await getRacesById(user.id, token);
+
+          // Regrouper les données par date
+          const groupedData = userRaces.reduce((acc: { [key: string]: Race[] }, item: Race) => {
+            const dateKey = format(new Date(item.createdAt), 'd MMMM', { locale: fr });
+            if (!acc[dateKey]) {
+              acc[dateKey] = [];
+            }
+            acc[dateKey].push(item);
+            return acc;
+          }, {});
+
+          // Formater les données pour les adapter au format de dateCards
+          const formattedData = Object.entries(groupedData).map(([date, items], index) => {
+            const metrics = items.flatMap((item: Race) => ([
+              { label: "Temps", value: `${item.timeSpent.toFixed(2)} min` },
+              { label: "Distance", value: `${item.distanceCovered.toFixed(2)} km` },
+              { label: "Vitesse max", value: `${item.averageSpeed.toFixed(2)} km/h` },
+            ]));
+
+            return {
+              id: index,
+              date: date,
+              metrics: metrics,
+              badgeCount: items.length,
+            };
+          });
+
+          setDateCards(formattedData);
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données historiques :", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistoryData();
+  }, []);
 
   const toggleCard = (index: number) => {
-    // Alterner l'état d'expansion pour le bloc cliqué
     setExpandedCard(expandedCard === index ? null : index);
   };
 
-  const handleStatsClick = (id: number) => {
-    // Navigation vers la page des statistiques
-    router.push("/stats");
+  const handleStatsClick = (id: number, date: string) => {
+    // Formater la date au format ISO pour la passer à StatsPage
+    const isoDate = format(new Date(date), 'yyyy-MM-dd'); 
+    // Naviguer vers la page des statistiques en passant la date comme paramètre
+    router.push({
+      pathname: "/stats",
+      params: { date: isoDate },
+    });
   };
 
   const handleDeleteClick = (id: number) => {
-    // Supprimer le bloc
     setDateCards((prevCards) => prevCards.filter((card) => card.id !== id));
   };
 
@@ -89,7 +218,7 @@ const HistoryPage: React.FC = () => {
                   )}
                 </View>
                 <View style={styles.dateIcons}>
-                  <Pressable onPress={() => handleStatsClick(card.id)}>
+                  <Pressable onPress={() => handleStatsClick(card.id, card.date)}>
                     <Image
                       style={styles.icon}
                       resizeMode="cover"
@@ -105,29 +234,19 @@ const HistoryPage: React.FC = () => {
                   </Pressable>
                 </View>
               </Pressable>
-              {/* Afficher ou masquer les informations en fonction de l'état */}
-              {expandedCard === card.id && card.date !== "6 juin" && (
-                <>
-                  <View style={styles.metrics}>
-                    {card.metrics.map((metric, index) => (
-                      <View key={index} style={styles.metricRow}>
+              {expandedCard === card.id && (
+                <View style={styles.metrics}>
+                  {card.metrics.map((metric, index) => (
+                    <View key={index}>
+                      <View style={styles.metricRow}>
                         <Text style={styles.metricText}>{metric.label} :</Text>
                         <Text style={styles.metricValue}>{metric.value}</Text>
                       </View>
-                    ))}
-                  </View>
-
-                  <View style={styles.separator} />
-
-                  <View style={styles.metrics}>
-                    {card.metrics.map((metric, index) => (
-                      <View key={index} style={styles.metricRow}>
-                        <Text style={styles.metricText}>{metric.label} :</Text>
-                        <Text style={styles.metricValue}>{metric.value}</Text>
-                      </View>
-                    ))}
-                  </View>
-                </>
+                      {/* Ajout de la ligne de séparation après la vitesse max */}
+                      {metric.label === "Vitesse max" && <View style={styles.separator} />}
+                    </View>
+                  ))}
+                </View>
               )}
             </View>
           ))}
@@ -137,6 +256,7 @@ const HistoryPage: React.FC = () => {
     </>
   );
 };
+
 
 const styles = StyleSheet.create({
   historique: {
@@ -244,6 +364,7 @@ const styles = StyleSheet.create({
   metricText: {
     fontSize: 18,
     color: "#1e293b",
+    marginRight: 8, // Espace entre le label et la valeur
   },
 
   metricValue: {
@@ -255,7 +376,7 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: "#e0e0e0",
-    marginVertical: 16,
+    marginVertical: 8,
   },
 });
 

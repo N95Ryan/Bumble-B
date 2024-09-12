@@ -4,6 +4,7 @@ import GroupWrapper from "@/components/Stats/GroupWrapper";
 import Header from "@/components/Stats/Header";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { useLocalSearchParams } from "expo-router"; // Import correct pour récupérer les paramètres de navigation
 
 const StatsPage: React.FC = () => {
   const [timeSpent, setTimeSpent] = useState<number[]>([]);
@@ -12,7 +13,11 @@ const StatsPage: React.FC = () => {
   const [wheelRotationSpeed, setWheelRotationSpeed] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
 
-  const filterDate = "2024-09-11";
+  // Récupérer la date envoyée depuis HistoryPage
+  const { date } = useLocalSearchParams();
+
+  // Si `date` est un tableau, utiliser le premier élément, sinon utiliser la valeur directement
+  const filterDate = Array.isArray(date) ? date[0] : date || "2024-09-11";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,10 +37,10 @@ const StatsPage: React.FC = () => {
         const jsonData = await response.json();
         const lastSevenEntries = jsonData.slice(-7);
 
-        // Filter data based on the fixed date
+        // Filtrer les données en fonction de la date passée
         const filteredEntries = lastSevenEntries.filter((stat: any) => {
-          const date = new Date(stat.createdAt).toISOString().split('T')[0];
-          return date === filterDate;
+          const statDate = new Date(stat.createdAt).toISOString().split('T')[0];
+          return statDate === filterDate;
         });
 
         const hours = filteredEntries.map((stat: any) => {
@@ -45,6 +50,7 @@ const StatsPage: React.FC = () => {
           return `${hour}:${minutes}`;
         });
 
+        // Mettre à jour les états avec les données filtrées
         setLabels(hours);
         setTimeSpent(filteredEntries.map((stat: any) => stat.timeSpent));
         setDistanceCovered(filteredEntries.map((stat: any) => stat.distanceCovered));
@@ -56,8 +62,7 @@ const StatsPage: React.FC = () => {
     };
 
     fetchData();
-  }, [filterDate]);
-
+  }, [filterDate]); // Réexécute l'effet lorsque filterDate change
 
   return (
     <View style={styles.container}>
@@ -69,7 +74,7 @@ const StatsPage: React.FC = () => {
           averageSpeed={averageSpeed}
           wheelRotationSpeed={wheelRotationSpeed}
           labels={labels}
-          selectedDate={filterDate}
+          selectedDate={filterDate} // Passer la date sélectionnée
         />
         <GroupWrapper
           timeSpent={timeSpent}
