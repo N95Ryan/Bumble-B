@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "react-native";
 import RaceBoard from "@/components/RaceBoard/RaceBoard";
 import Navbar from "@/components/Navbar/Navbar";
-import axios from 'axios'; // Assurez-vous d'avoir installé axios avec `npm install axios` ou `yarn add axios`
+import axios from "axios"; // Assurez-vous d'avoir installé axios avec `npm install axios` ou `yarn add axios`
 
 // Interface pour le payload JWT
 interface JwtPayload {
@@ -41,33 +41,38 @@ function parseJwt(token: string) {
 
 const getUsersByUsername = async (username: string, token: string) => {
   try {
-    const response = await axios.get('http://localhost:8080/users', {
+    const response = await axios.get("http://localhost:8080/users", {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
-    console.log('Users Response:', response.data);
+    console.log("Users Response:", response.data);
     // Filtrer les utilisateurs par nom d'utilisateur
-    const filteredUsers = response.data.filter((user: any) => user.username === username);
-    console.log('Filtered Users:', filteredUsers);
+    const filteredUsers = response.data.filter(
+      (user: any) => user.username === username
+    );
+    console.log("Filtered Users:", filteredUsers);
     return filteredUsers;
   } catch (error) {
-    console.error('Get Users Error:', error);
+    console.error("Get Users Error:", error);
     return [];
   }
 };
 
 const getRacesById = async (userId: string, token: string) => {
   try {
-    const response = await axios.get(`http://localhost:8080/users/${userId}/races`, {
-      headers: {
-        Authorization: `Bearer ${token}`
+    const response = await axios.get(
+      `http://localhost:8080/users/${userId}/races`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    });
-    console.log('Races Response:', response.data);
+    );
+    console.log("Races Response:", response.data);
     return response.data;
   } catch (error) {
-    console.error('Get Races Error:', error);
+    console.error("Get Races Error:", error);
     return [];
   }
 };
@@ -99,7 +104,10 @@ export default function Dashboard() {
           }
         }
       } catch (error) {
-        console.error("Erreur lors de la récupération du token ou des données utilisateur :", error);
+        console.error(
+          "Erreur lors de la récupération du token ou des données utilisateur :",
+          error
+        );
       }
     };
 
@@ -114,7 +122,8 @@ export default function Dashboard() {
       />
       <Text style={styles.greeting}>Bonjour {username}</Text>
       <Text style={styles.text}>Lorem ipsum dolor sit amet</Text>
-      <RaceBoard races={races} /> {/* Passez les courses au composant RaceBoard */}
+      <RaceBoard races={races} />{" "}
+      {/* Passez les courses au composant RaceBoard */}
       <Navbar />
     </View>
   );
