@@ -1,16 +1,33 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Chronometre from "../../src/js/chronometre/chronometre";
-import { calculateDistance } from "../../src/js/script_joystick_roues";
+import { calculateAverageSpeed, calculateDistance } from "../../src/js/script_joystick_roues";
 import Joystick from "./Joystick";
-import { calculateAverageSpeed } from "../../src/js/script_joystick_roues";
+
+// Define the User interface with the id property
+interface User {
+  id: number;
+  firstname: string;
+  lastname: string;
+  username: string;
+  // Define other user properties as needed
+}
 
 interface ChronometreType {
   getTime: () => number;
   stop: () => void;
 }
 
-const Units = ({ is_landscape }: { is_landscape: boolean }) => {
+interface UnitsProps {
+  is_landscape: boolean;
+  user: User | null; // Update the type to include user
+}
+
+const Units = ({ is_landscape, user }: UnitsProps) => {
+  const router = useRouter();
   const [vitesse, setVitesse] = useState<number>(0); // Vitesse actuelle
   const [totalDistance, setTotalDistance] = useState<number>(0); // Distance totale
   const [averageSpeed, setAverageSpeed] = useState<number | null>(null); // Vitesse moyenne
@@ -60,18 +77,48 @@ const Units = ({ is_landscape }: { is_landscape: boolean }) => {
   }, []);
 
   // Fonction pour calculer la vitesse moyenne à la fin (quand on appuie sur stop)
-  const handleStop = () => {
+  const handleStop = async () => {
     if (chronometreRef.current) {
       chronometreRef.current.stop();
 
-      const totalTime = chronometreRef.current.getTime(); // Temps total écoulé
+      const totalTime = chronometreRef.current.getTime();
       if (totalTime > 0) {
-        const finalAverageSpeed = calculateAverageSpeed(
-          totalDistance,
-          totalTime
-        );
-        setAverageSpeed(finalAverageSpeed); // Mettre à jour la vitesse moyenne
+        const finalAverageSpeed = calculateAverageSpeed(totalDistance,totalTime);
+        setAverageSpeed(finalAverageSpeed);
+        
+
+        const requestBody = {
+          averageSpeed: arrondir(finalAverageSpeed, 2),
+          distanceCovered: arrondir(totalDistance, 2),
+          timeSpent: arrondir((totalTime / 100), 2),
+          wheelRotationSpeed: 0,
+          user: {
+            id: user?.id || 0,
+          },
+        };
+
+        try {
+          // Retrieve the JWT token from AsyncStorage
+          const token = await AsyncStorage.getItem("jwt_token");
+
+          // Send the POST request
+          await axios.post('http://localhost:8080/races', requestBody, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          console.log('Données envoyées avec succès.');
+          router.push('/history');
+        } catch (error) {
+          console.error('Erreur lors de l\'envoi des données:', error);
+        }
+      } else {
+        console.log("Temps total invalide.");
       }
+    } else {
+      console.log("Chronomètre non disponible.");
     }
   };
 
@@ -142,14 +189,12 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 32,
   },
-
   joystickVertical: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
   },
-
   joystickHorizontal: {
     position: "absolute",
     bottom: 50,
@@ -169,7 +214,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   stopButtonVertical: {
     display: "flex",
     flexDirection: "column",
