@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, Pressable, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getUsersByUsername, getRacesById, deleteRacesByDate, parseJwt } from '@/components/History/Api';
+import { deleteRacesByDate, getRacesById, getUsersByUsername, parseJwt } from '@/components/History/Api';
 import DateCard from '@/components/History/DateCard';
 import Navbar from '@/components/Navbar/Navbar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format, parse } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface Race {
   createdAt: string;
@@ -51,8 +51,8 @@ const HistoryPage: React.FC = () => {
           const formattedData = Object.entries(groupedData).map(([date, items], index) => {
             const metrics = items.flatMap((item) => ([
               { label: 'Temps', value: `${item.timeSpent.toFixed(2)} min` },
-              { label: 'Distance', value: `${item.distanceCovered.toFixed(2)} km` },
-              { label: 'Vitesse max', value: `${item.averageSpeed.toFixed(2)} km/h` },
+              { label: 'Distance', value: `${item.distanceCovered.toFixed(2)} m` },
+              { label: 'Vitesse max', value: `${item.averageSpeed.toFixed(2)} m/s` },
             ])).filter(Boolean);
 
             return {
