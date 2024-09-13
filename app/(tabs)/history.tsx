@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Image, StyleSheet, Pressable, Text, View } from "react-native";
-import { useRouter } from "expo-router";
+import React, { useState, useEffect } from 'react';
+import { Image, StyleSheet, Pressable, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import Navbar from "@/components/Navbar/Navbar";
+import Navbar from '@/components/Navbar/Navbar';
 import { format, parse } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -14,6 +14,7 @@ interface Metric {
 }
 
 interface Race {
+  id: number;
   createdAt: string;
   timeSpent: number;
   distanceCovered: number;
@@ -36,27 +37,27 @@ interface JwtPayload {
 // Fonction pour décoder le token JWT
 function parseJwt(token: string) {
   try {
-    const base64Url = token.split(".")[1];
+    const base64Url = token.split('.')[1];
     if (!base64Url) {
-      throw new Error("Invalid token format");
+      throw new Error('Invalid token format');
     }
 
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = atob(base64);
 
     // Ajout du support pour UTF-8
     const decoded = decodeURIComponent(
       jsonPayload
-        .split("")
+        .split('')
         .map(function (c) {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         })
-        .join("")
+        .join('')
     );
 
     return JSON.parse(decoded);
   } catch (error) {
-    console.error("Erreur lors du décodage du JWT :", error);
+    console.error('Erreur lors du décodage du JWT :', error);
     return null;
   }
 }
@@ -96,22 +97,56 @@ const getRacesById = async (userId: string, token: string) => {
   }
 };
 
+// Fonction pour supprimer toutes les courses d'une date donnée
+const deleteRacesByDate = async (date: string, token: string) => {
+  try {
+    // Convertir la date au format ISO pour la requête
+    const isoDate = format(parse(date, 'd MMMM', new Date(), { locale: fr }), 'yyyy-MM-dd');
+
+    // Récupérer toutes les courses
+    const response = await axios.get(`http://localhost:8080/races`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    
+    // Filtrer les courses par date
+    const racesToDelete = response.data.filter((race: Race) => {
+      const raceDate = format(new Date(race.createdAt), 'yyyy-MM-dd');
+      return raceDate === isoDate;
+    });
+
+    // Supprimer chaque course trouvée
+    for (const race of racesToDelete) {
+      await axios.delete(`http://localhost:8080/races/${race.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+
+    console.log('Courses supprimées avec succès');
+  } catch (error) {
+    console.error('Erreur lors de la suppression des courses :', error);
+  }
+};
+
 const HistoryPage: React.FC = () => {
   const router = useRouter();
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [dateCards, setDateCards] = useState<DateCard[]>([]);
-  const [username, setUsername] = useState<string>("");
+  const [username, setUsername] = useState<string>('');
 
   // Fonction pour récupérer les données d'historique des courses
   const fetchHistoryData = async () => {
     try {
-      const token = await AsyncStorage.getItem("jwt_token");
-      console.log("Token récupéré depuis AsyncStorage:", token);
+      const token = await AsyncStorage.getItem('jwt_token');
+      console.log('Token récupéré depuis AsyncStorage:', token);
 
       if (token) {
         // Décoder le token JWT pour extraire le nom d'utilisateur
         const decodedToken = parseJwt(token) as JwtPayload;
-        const userName = decodedToken?.sub || "Inconnu";
+        const userName = decodedToken?.sub || 'Inconnu';
         setUsername(userName);
 
         // Obtenir l'utilisateur correspondant
@@ -134,11 +169,11 @@ const HistoryPage: React.FC = () => {
 
           // Formater les données pour les adapter au format de dateCards
           const formattedData = Object.entries(groupedData).map(([date, items], index) => {
-            const metrics = items.flatMap((item: Race) => ([
-              { label: "Temps", value: `${item.timeSpent.toFixed(2)} min` },
-              { label: "Distance", value: `${item.distanceCovered.toFixed(2)} km` },
-              { label: "Vitesse max", value: `${item.averageSpeed.toFixed(2)} km/h` },
-            ]));
+            const metrics = items.flatMap((item: Race) => ([  
+              { label: 'Temps', value: `${item.timeSpent.toFixed(2)} min` },
+              { label: 'Distance', value: `${item.distanceCovered.toFixed(2)} km` },
+              { label: 'Vitesse max', value: `${item.averageSpeed.toFixed(2)} km/h` },
+            ]).filter(Boolean) as Metric[]);
 
             return {
               id: index,
@@ -152,7 +187,7 @@ const HistoryPage: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error("Erreur lors de la récupération des données historiques :", error);
+      console.error('Erreur lors de la récupération des données historiques :', error);
     }
   };
 
@@ -164,7 +199,7 @@ const HistoryPage: React.FC = () => {
     setExpandedCard(expandedCard === index ? null : index);
   };
 
-  const handleStatsClick = (id: number, date: string) => {
+  const handleStatsClick = (date: string) => {
     // Utiliser 'parse' pour analyser la date du format "d MMMM" au format de date complet
     const parsedDate = parse(date, 'd MMMM', new Date(), { locale: fr });
     
@@ -173,24 +208,33 @@ const HistoryPage: React.FC = () => {
     
     // Naviguer vers la page des statistiques en passant la date comme paramètre
     router.push({
-      pathname: "/stats",
+      pathname: '/stats',
       params: { date: isoDate },
     });
   };
 
-  const handleDeleteClick = (id: number) => {
-    setDateCards((prevCards) => prevCards.filter((card) => card.id !== id));
+  const handleDeleteClick = async (date: string) => {
+    try {
+      const token = await AsyncStorage.getItem('jwt_token');
+      if (token) {
+        await deleteRacesByDate(date, token);
+        // Recharger les données après la suppression
+        fetchHistoryData();
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression des courses :', error);
+    }
   };
 
   return (
     <>
       <View style={styles.historique}>
         <View style={styles.header}>
-          <Pressable onPress={() => router.push("/dashboard")}>
+          <Pressable onPress={() => router.push('/dashboard')}>
             <Image
               style={styles.backIcon}
               resizeMode="cover"
-              source={require("../../assets/images/flèche.png")}
+              source={require('../../assets/images/flèche.png')}
             />
           </Pressable>
           <View style={styles.headerTextContainer}>
@@ -212,7 +256,7 @@ const HistoryPage: React.FC = () => {
                   <Image
                     style={styles.icon}
                     resizeMode="cover"
-                    source={require("../../assets/images/bas.png")}
+                    source={require('../../assets/images/bas.png')}
                   />
                   <Text style={styles.dateText}>{card.date}</Text>
                   {card.badgeCount > 0 && (
@@ -222,18 +266,18 @@ const HistoryPage: React.FC = () => {
                   )}
                 </View>
                 <View style={styles.dateIcons}>
-                  <Pressable onPress={() => handleStatsClick(card.id, card.date)}>
+                  <Pressable onPress={() => handleStatsClick(card.date)}>
                     <Image
                       style={styles.icon}
                       resizeMode="cover"
-                      source={require("../../assets/images/stats.png")}
+                      source={require('../../assets/images/stats.png')}
                     />
                   </Pressable>
-                  <Pressable onPress={() => handleDeleteClick(card.id)}>
+                  <Pressable onPress={() => handleDeleteClick(card.date)}>
                     <Image
                       style={styles.icon}
                       resizeMode="cover"
-                      source={require("../../assets/images/poubelle.png")}
+                      source={require('../../assets/images/poubelle.png')}
                     />
                   </Pressable>
                 </View>
@@ -246,8 +290,8 @@ const HistoryPage: React.FC = () => {
                         <Text style={styles.metricText}>{metric.label} :</Text>
                         <Text style={styles.metricValue}>{metric.value}</Text>
                       </View>
-                      {/* Ajout de la ligne de séparation après la vitesse max */}
-                      {metric.label === "Vitesse max" && <View style={styles.separator} />}
+                      {/* Ajout de la ligne de séparation sous la vitesse moyenne */}
+                      {metric.label === 'Vitesse max' && <View style={styles.separator} />}
                     </View>
                   ))}
                 </View>
