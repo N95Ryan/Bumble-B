@@ -1,10 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import { useRouter } from 'expo-router';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { useRouter, Link } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Chronometre from "../../src/js/chronometre/chronometre";
-import { calculateAverageSpeed, calculateDistance } from "../../src/js/script_joystick_roues";
+import {
+  calculateAverageSpeed,
+  calculateDistance,
+} from "../../src/js/script_joystick_roues";
 import Joystick from "./Joystick";
 
 // Define the User interface with the id property
@@ -83,14 +86,16 @@ const Units = ({ is_landscape, user }: UnitsProps) => {
 
       const totalTime = chronometreRef.current.getTime();
       if (totalTime > 0) {
-        const finalAverageSpeed = calculateAverageSpeed(totalDistance,totalTime);
+        const finalAverageSpeed = calculateAverageSpeed(
+          totalDistance,
+          totalTime
+        );
         setAverageSpeed(finalAverageSpeed);
-        
 
         const requestBody = {
           averageSpeed: arrondir(finalAverageSpeed, 2),
           distanceCovered: arrondir(totalDistance, 2),
-          timeSpent: arrondir((totalTime / 100), 2),
+          timeSpent: arrondir(totalTime / 1000, 2), // Corrigé ici pour les secondes
           wheelRotationSpeed: 0,
           user: {
             id: user?.id || 0,
@@ -102,17 +107,24 @@ const Units = ({ is_landscape, user }: UnitsProps) => {
           const token = await AsyncStorage.getItem("jwt_token");
 
           // Send the POST request
-          await axios.post('http://localhost:8080/races', requestBody, {
+          await axios.post("http://localhost:8080/races", requestBody, {
             headers: {
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           });
 
-          console.log('Données envoyées avec succès.');
-          router.push('/history');
+          console.log("Données envoyées avec succès.");
+          router.push("/history");
         } catch (error) {
-          console.error('Erreur lors de l\'envoi des données:', error);
+          if (axios.isAxiosError(error)) {
+            console.error(
+              "Erreur Axios:",
+              error.response?.data || error.message
+            );
+          } else {
+            console.error("Erreur lors de l'envoi des données:", error);
+          }
         }
       } else {
         console.log("Temps total invalide.");
@@ -148,12 +160,32 @@ const Units = ({ is_landscape, user }: UnitsProps) => {
       >
         <Joystick onEmit={handleEmit} is_landscape={is_landscape} />
       </View>
+
       <View
         style={
-          is_landscape ? styles.stopButtonHorizontal : styles.stopButtonVertical
+          is_landscape
+            ? styles.buttonContainerHorizontal
+            : styles.buttonContainerVertical
         }
       >
-        <TouchableOpacity onPress={handleStop}>STOP</TouchableOpacity>
+        <View
+          style={
+            is_landscape
+              ? styles.stopButtonHorizontal
+              : styles.stopButtonVertical
+          }
+        >
+          <TouchableOpacity onPress={handleStop}>STOP</TouchableOpacity>
+        </View>
+        <View
+          style={
+            is_landscape
+              ? styles.homeButtonHorizontal
+              : styles.homeButtonVertical
+          }
+        >
+          <Link href={"/dashboard"}>ACCUEIL</Link>
+        </View>
       </View>
     </>
   );
@@ -189,6 +221,56 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 32,
   },
+
+  buttonContainerHorizontal: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 24,
+  },
+
+  buttonContainerVertical: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 24,
+  },
+
+  stopButtonHorizontal: {
+    width: 100,
+    height: 50,
+    backgroundColor: "#cf142b",
+    fontFamily: "Roboto",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
+  stopButtonVertical: {
+    width: 100,
+    height: 50,
+    backgroundColor: "#cf142b",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
+
+  homeButtonHorizontal: {
+    width: 100,
+    height: 50,
+    backgroundColor: "#FFFFFF",
+    fontFamily: "Roboto",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
+  homeButtonVertical: {
+    width: 100,
+    height: 50,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
   joystickVertical: {
     display: "flex",
     flexDirection: "column",
@@ -199,35 +281,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 50,
     right: 50,
-  },
-  stopButtonHorizontal: {
-    top: 150,
-    width: 50,
-    height: 25,
-    paddingHorizontal: 52,
-    paddingVertical: 26,
-    backgroundColor: "#cf142b",
-    color: "#FFFFFF",
-    borderRadius: 6,
-    fontSize: 22,
-    fontFamily: "Roboto",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  stopButtonVertical: {
-    display: "flex",
-    flexDirection: "column",
-    width: 50,
-    height: 25,
-    paddingHorizontal: 26,
-    paddingVertical: 26,
-    backgroundColor: "#cf142b",
-    color: "#FFFFFF",
-    borderRadius: 6,
-    fontSize: 14,
-    fontFamily: "Roboto",
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
 

@@ -1,20 +1,20 @@
 import Header from "@/components/Modes/Header";
 import ModeSelector from "@/components/Modes/ModeSelector";
 import { useRouter } from "expo-router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Navbar from "@/components/Navbar/Navbar";
-import { sendCommand } from '../../src/js/websocket';
+import { sendCommand } from "../../src/js/websocket";
 import { activerModeGuide, desactivermodeGuide } from "@/src/js/guidedMode";
 
 export default function ModesPage() {
   desactivermodeGuide();
 
-  const [selectedMode, setSelectedMode] = useState<"guided" | "manual" | null>(null);
+  const [selectedMode, setSelectedMode] = useState<"guided" | "manual" | null>(
+    null
+  );
   const router = useRouter();
 
-
-  
   const handlePress = () => {
     if (selectedMode) {
       router.push(`/controls?mode=${selectedMode}`);
@@ -27,8 +27,8 @@ export default function ModesPage() {
       sendCommand(10, 0);
       console.log("Mode manuel activé");
       desactivermodeGuide();
-    } else if(selectedMode === "guided") {
-        activerModeGuide();
+    } else if (selectedMode === "guided") {
+      activerModeGuide();
     }
   }
 
