@@ -18,7 +18,6 @@ export default function ControlsPage() {
             <Bandeau is_landscape={is_landscape} />
             <Image is_landscape={is_landscape} />
             <Units is_landscape={is_landscape} />
-            <Joystick is_landscape={is_landscape} />
         </View>
     );
 }

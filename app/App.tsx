@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { initWebSocket } from '@/src/js/websocket';
+
 
 // Importation des composants des écrans de l'application
 import BumbleSplash from './BumbleSplash';
@@ -12,6 +14,9 @@ const Stack = createNativeStackNavigator();
 
 // Définition du composant principal de l'application
 function App() {
+    React.useEffect(() => {
+    initWebSocket();
+  }, [])
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">
@@ -22,5 +27,6 @@ function App() {
     </NavigationContainer>
   );
 }
+initWebSocket();
 
 export default App;
