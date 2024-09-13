@@ -121,7 +121,7 @@ export default function Dashboard() {
         style={{ width: 56, height: 56 }}
       />
       <Text style={styles.greeting}>Bonjour {username}</Text>
-      <Text style={styles.text}>Lorem ipsum dolor sit amet</Text>
+      <Text style={styles.text}>Bienvenue sur Bumble B 🐝</Text>
       <RaceBoard races={races} />{" "}
       {/* Passez les courses au composant RaceBoard */}
       <Navbar />
