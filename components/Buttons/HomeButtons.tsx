@@ -1,54 +1,64 @@
-import { Text, StyleSheet, Platform } from "react-native";
-import { Link } from "expo-router";
+import React from 'react';
+import { Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Importer AsyncStorage
 
 export const HomeButtons = () => {
+  const router = useRouter();
+
+  const handleGuestMode = async () => {
+    try {
+      // Supprimer le token du AsyncStorage
+      await AsyncStorage.removeItem('jwt_token');
+      // Naviguer vers la page dashboard
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Erreur lors de la suppression du token:', error);
+    }
+  };
+
   return (
     <>
-      <Link href={"/signUp"} style={styles.loginButton}>
-      <Text style={styles.loginButtonText}>S'inscrire</Text>
-      </Link>
+      <TouchableOpacity onPress={() => router.push('/signUp')} style={styles.loginButton}>
+        <Text style={styles.loginButtonText}>S'inscrire</Text>
+      </TouchableOpacity>
 
-      <Link href={"/dashboard"} style={styles.guestButton}>
-      <Text style={styles.guestButtonText}>Mode invité</Text>
-      </Link>
+      <TouchableOpacity onPress={handleGuestMode} style={styles.guestButton}>
+        <Text style={styles.guestButtonText}>Mode invité</Text>
+      </TouchableOpacity>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-
- loginButton: {
-    width: "100%",
+  loginButton: {
+    width: '100%',
     padding: 16,
-    backgroundColor: "#FDE047",
+    backgroundColor: '#FDE047',
     borderRadius: 24,
-    alignItems: "center",
+    alignItems: 'center',
     marginVertical: 8,
   },
-
   guestButton: {
-    width: "100%",
+    width: '100%',
     padding: 16,
-    backgroundColor: "#E2E8F0",
-    borderRadius: Platform.OS === "web" ? 24 : 0,
-    alignItems: "center",
+    backgroundColor: '#E2E8F0',
+    borderRadius: Platform.OS === 'web' ? 24 : 0,
+    alignItems: 'center',
     marginVertical: 8,
   },
-
   loginButtonText: {
-    color: "#713F12",
-    fontWeight: "bold",
+    color: '#713F12',
+    fontWeight: 'bold',
     fontSize: 16,
-    display: "flex",
-    justifyContent: "center",
-
+    display: 'flex',
+    justifyContent: 'center',
   },
-
   guestButtonText: {
-    color: "#1E293B",
-    fontWeight: "bold",
+    color: '#1E293B',
+    fontWeight: 'bold',
     fontSize: 16,
-    display: "flex",
-    justifyContent: "center",
+    display: 'flex',
+    justifyContent: 'center',
   },
 });
