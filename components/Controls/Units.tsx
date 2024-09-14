@@ -1,16 +1,44 @@
+
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Chronometre from "../../src/js/chronometre/chronometre";
 import { calculateDistance } from "../../src/js/script_joystick_roues";
 import Joystick from "./Joystick";
 import { calculateAverageSpeed } from "../../src/js/script_joystick_roues";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { useRouter, Link } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Chronometre from "../../src/js/chronometre/chronometre";
+import {
+  calculateAverageSpeed,
+  calculateDistance,
+} from "../../src/js/script_joystick_roues";
+import Joystick from "./Joystick";
 
+// Define the User interface with the id property
+interface User {
+  id: number;
+  firstname: string;
+  lastname: string;
+  username: string;
+  // Define other user properties as needed
+}
 interface ChronometreType {
   getTime: () => number;
   stop: () => void;
 }
 
+
 const Units = ({ is_landscape }: { is_landscape: boolean }) => {
+interface UnitsProps {
+  is_landscape: boolean;
+  user: User | null; // Update the type to include user
+}
+
+const Units = ({ is_landscape, user }: UnitsProps) => {
+  const router = useRouter();
   const [vitesse, setVitesse] = useState<number>(0); // Vitesse actuelle
   const [totalDistance, setTotalDistance] = useState<number>(0); // Distance totale
   const [averageSpeed, setAverageSpeed] = useState<number | null>(null); // Vitesse moyenne
@@ -60,7 +88,7 @@ const Units = ({ is_landscape }: { is_landscape: boolean }) => {
   }, []);
 
   // Fonction pour calculer la vitesse moyenne à la fin (quand on appuie sur stop)
-  const handleStop = () => {
+  const handleStop = async () => {
     if (chronometreRef.current) {
       chronometreRef.current.stop();
 
@@ -70,8 +98,51 @@ const Units = ({ is_landscape }: { is_landscape: boolean }) => {
           totalDistance,
           totalTime
         );
+
         setAverageSpeed(finalAverageSpeed); // Mettre à jour la vitesse moyenne
+
+        setAverageSpeed(finalAverageSpeed);
+
+        const requestBody = {
+          averageSpeed: arrondir(finalAverageSpeed, 2),
+          distanceCovered: arrondir(totalDistance, 2),
+          timeSpent: arrondir(totalTime / 1000, 2), // Corrigé ici pour les secondes
+          wheelRotationSpeed: 0,
+          user: {
+            id: user?.id || 0,
+          },
+        };
+
+        try {
+          // Retrieve the JWT token from AsyncStorage
+          const token = await AsyncStorage.getItem("jwt_token");
+
+          // Send the POST request
+          await axios.post("http://localhost:8080/races", requestBody, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          console.log("Données envoyées avec succès.");
+          router.push("/history");
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            console.error(
+              "Erreur Axios:",
+              error.response?.data || error.message
+            );
+          } else {
+            console.error("Erreur lors de l'envoi des données:", error);
+          }
+        }
+      } else {
+        console.log("Temps total invalide.");
+
       }
+    } else {
+      console.log("Chronomètre non disponible.");
     }
   };
 
@@ -101,12 +172,40 @@ const Units = ({ is_landscape }: { is_landscape: boolean }) => {
       >
         <Joystick onEmit={handleEmit} is_landscape={is_landscape} />
       </View>
+
       <View
         style={
           is_landscape ? styles.stopButtonHorizontal : styles.stopButtonVertical
         }
       >
         <TouchableOpacity onPress={handleStop}>STOP</TouchableOpacity>
+
+      <View
+        style={
+          is_landscape
+            ? styles.buttonContainerHorizontal
+            : styles.buttonContainerVertical
+        }
+      >
+        <View
+          style={
+            is_landscape
+              ? styles.stopButtonHorizontal
+              : styles.stopButtonVertical
+          }
+        >
+          <TouchableOpacity onPress={handleStop}>STOP</TouchableOpacity>
+        </View>
+        <View
+          style={
+            is_landscape
+              ? styles.homeButtonHorizontal
+              : styles.homeButtonVertical
+          }
+        >
+          <Link href={"/dashboard"}>ACCUEIL</Link>
+        </View>
+
       </View>
     </>
   );
@@ -184,6 +283,67 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  buttonContainerHorizontal: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 24,
+  },
+
+  buttonContainerVertical: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 24,
+  },
+
+  stopButtonHorizontal: {
+    width: 100,
+    height: 50,
+    backgroundColor: "#cf142b",
+    fontFamily: "Roboto",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
+  stopButtonVertical: {
+    width: 100,
+    height: 50,
+    backgroundColor: "#cf142b",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
+
+  homeButtonHorizontal: {
+    width: 100,
+    height: 50,
+    backgroundColor: "#FFFFFF",
+    fontFamily: "Roboto",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
+  homeButtonVertical: {
+    width: 100,
+    height: 50,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
+  joystickVertical: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  joystickHorizontal: {
+    position: "absolute",
+    bottom: 50,
+    right: 50,
   },
 });
 
