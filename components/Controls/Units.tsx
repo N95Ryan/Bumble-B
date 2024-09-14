@@ -9,6 +9,7 @@ import {
   calculateDistance,
 } from "../../src/js/script_joystick_roues";
 import Joystick from "./Joystick";
+import { HomeButtons } from "../Buttons/HomeButtons";
 
 // Define the User interface with the id property
 interface User {
@@ -154,37 +155,28 @@ const Units = ({ is_landscape, user }: UnitsProps) => {
         </View>
       </View>
       <View
-        style={
-          is_landscape ? styles.joystickHorizontal : styles.joystickVertical
-        }
+        style={[
+          is_landscape
+            ? styles.joystickHorizontal
+            : styles.joystickAndButtonsVertical,
+        ]}
       >
         <Joystick onEmit={handleEmit} is_landscape={is_landscape} />
-      </View>
-
-      <View
-        style={
-          is_landscape
-            ? styles.buttonContainerHorizontal
-            : styles.buttonContainerVertical
-        }
-      >
         <View
-          style={
+          style={[
             is_landscape
-              ? styles.stopButtonHorizontal
-              : styles.stopButtonVertical
-          }
+              ? styles.buttonContainerHorizontal
+              : styles.buttonContainerVertical,
+          ]}
         >
-          <TouchableOpacity onPress={handleStop}>STOP</TouchableOpacity>
-        </View>
-        <View
-          style={
-            is_landscape
-              ? styles.homeButtonHorizontal
-              : styles.homeButtonVertical
-          }
-        >
-          <Link href={"/dashboard"}>ACCUEIL</Link>
+          <TouchableOpacity style={styles.stopButton} onPress={handleStop}>
+            STOP
+          </TouchableOpacity>
+          <View style={styles.homeButton}>
+            <Link href="/dashboard" style={styles.homeButtonText}>
+              ACCUEIL
+            </Link>
+          </View>
         </View>
       </View>
     </>
@@ -197,21 +189,25 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     rowGap: 24,
   },
+
   unit_content: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     rowGap: 8,
   },
+
   unit_label: {
     fontSize: 17,
     color: "#94A3B8",
   },
+
   unit_value: {
     fontSize: 33,
     fontWeight: "bold",
     color: "#FFFFFF",
   },
+
   units_container_landscape: {
     width: 200,
     backgroundColor: "rgba(2, 6, 23, 0.6)",
@@ -222,65 +218,63 @@ const styles = StyleSheet.create({
     borderRadius: 32,
   },
 
-  buttonContainerHorizontal: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 24,
-  },
-
-  buttonContainerVertical: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 24,
-  },
-
-  stopButtonHorizontal: {
-    width: 100,
-    height: 50,
-    backgroundColor: "#cf142b",
-    fontFamily: "Roboto",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 6,
-  },
-  stopButtonVertical: {
-    width: 100,
-    height: 50,
-    backgroundColor: "#cf142b",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 6,
-  },
-
-  homeButtonHorizontal: {
-    width: 100,
-    height: 50,
-    backgroundColor: "#FFFFFF",
-    fontFamily: "Roboto",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 6,
-  },
-  homeButtonVertical: {
-    width: 100,
-    height: 50,
-    backgroundColor: "#FFFFFF",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 6,
-  },
-  joystickVertical: {
+  joystickAndButtonsVertical: {
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    flexDirection: "row", // Disposer les éléments en ligne (joystick et boutons)
     justifyContent: "center",
+    alignItems: "center",
+    gap: 12,
   },
+
   joystickHorizontal: {
     position: "absolute",
     bottom: 50,
     right: 50,
+  },
+
+  buttonContainerHorizontal: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 12,
+    marginRight: 12,
+    position: "absolute",
+    bottom: 150,
+    left: 0,
+    right: 0,
+  },
+
+  buttonContainerVertical: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 12,
+  },
+
+  stopButton: {
+    width: 100,
+    height: 50,
+    backgroundColor: "#cf142b",
+    fontFamily: "Roboto",
+    fontWeight: "bold",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
+
+  homeButton: {
+    width: 100,
+    height: 50,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
+
+  homeButtonText: {
+    color: "#000",
+    fontFamily: "Roboto",
+    fontWeight: "bold",
   },
 });
 
