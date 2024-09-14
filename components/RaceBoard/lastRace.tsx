@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
 import { Link } from "expo-router";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 // Fonction pour formater la date sans l'heure
 const formatDateWithoutTime = (isoString: string): string => {
@@ -37,13 +37,13 @@ const LastRace: React.FC<LastRaceProps> = ({ races }) => {
               Date : <Text style={style.datas}>{formatDateWithoutTime(lastRace.createdAt || currentDate)}</Text>
             </Text>
             <Text>
-              Temps : <Text style={style.datas}>{lastRace.timeSpent || '15 min'}</Text>
+              Temps : <Text style={style.datas}>{lastRace.timeSpent || '0'} min</Text>
             </Text>
             <Text>
-              Distance : <Text style={style.datas}>{lastRace.distanceCovered || '4 km'}</Text>
+              Distance : <Text style={style.datas}>{lastRace.distanceCovered || 'O'} m</Text>
             </Text>
             <Text>
-              Vitesse max : <Text style={style.datas}>{lastRace.averageSpeed || '15 km/h'}</Text>
+              Vitesse moy : <Text style={style.datas}>{lastRace.averageSpeed || '0'} m/s</Text>
             </Text>
           </>
         ) : (

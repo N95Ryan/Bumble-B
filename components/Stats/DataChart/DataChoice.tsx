@@ -21,7 +21,10 @@ const DataChoice: React.FC<DataChoiceProps> = ({ onSelectData, selectedType }) =
                     <TouchableOpacity 
                     key={type} 
                     onPress={() => onSelectData(type)} 
-                    style={[styles.wrapperFlexBox, styles.wrapperDataFlexBox, selectedType === type && styles.dateDataContainerActive]}>
+                    style={[styles.wrapperFlexBox, 
+                    styles.wrapperDataFlexBox, 
+                    selectedType === type && styles.dateDataContainerActive,
+                    type === "wheelRotationSpeed" && styles.rotateNone]}>
                         <Text 
                         style={[styles.dateDataText, styles.dataText,selectedType === type && styles.dateDataActiveText]}>
                         {label}
@@ -80,6 +83,9 @@ const styles = StyleSheet.create({
     dataText: {
         fontSize: 10,
     },
+    rotateNone:{
+        display: "none",
+    }
 });
 
 export default DataChoice;
