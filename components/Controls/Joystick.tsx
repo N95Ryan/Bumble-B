@@ -10,18 +10,16 @@ interface JoystickProps {
   is_landscape?: boolean;
 }
 
-// react memo pour eviter que le joystick se mette a jour en meme temps que units
-// règle le problème de mouvement du joystick
+// Utilisation de React.memo pour éviter les rendus inutiles lorsque `Joystick` ne change pas
 const Joystick = React.memo(({ onEmit, is_landscape }: JoystickProps) => {
   const position = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const maxOffset = 50;
 
-
   // Création du panResponder pour gérer les mouvements du joystick
   const panResponder = PanResponder.create({
-
     // Indique qu'on doit gérer l'interaction tactile dès que l'utilisateur commence à bouger le joystick
     onMoveShouldSetPanResponder: () => true,
+
     // Gestion du mouvement du joystick
     onPanResponderMove: (e, gestureState) => {
       const { dx, dy } = gestureState; // Récupère les décalages (distance) sur l'axe horizontal (dx) et vertical (dy)
@@ -36,35 +34,27 @@ const Joystick = React.memo(({ onEmit, is_landscape }: JoystickProps) => {
       // Appelle la fonction pour gérer le mouvement du joystick et calcule la vitesse
       const speedInMeterPerSecond = handleJoystickMove(clampedDx, clampedDy);
 
-
       // Si une fonction onEmit est définie, envoie la vitesse calculée
-      if (typeof onEmit === 'function') {
-        onEmit(speedInMeterPerSecond); // Émet la vitesse (sous forme de message numérique) via onEmit
-
-      console.log("Speed:", speedInMeterPerSecond);
-
       if (typeof onEmit === "function") {
-        onEmit(speedInMeterPerSecond);
-
+        onEmit(speedInMeterPerSecond); // Émet la vitesse (sous forme de message numérique) via onEmit
+        console.log("Speed:", speedInMeterPerSecond);
       }
     },
 
     // Quand l'utilisateur relâche le joystick
     onPanResponderRelease: () => {
-      // remet le joystick a 0 avec une animation plus fluide
+      // Remet le joystick à 0 avec une animation fluide
       Animated.spring(position, {
         toValue: { x: 0, y: 0 },
         useNativeDriver: false,
       }).start();
 
-
-      // pour que la vitesse revienne a 0;
-      if (typeof onEmit === 'function') {
-=======
+      // Remet la vitesse à 0
       if (typeof onEmit === "function") {
-
         onEmit(0);
       }
+
+      // Met à jour la vitesse pour qu'elle revienne à 0
       updateSpeed([0, 0, 0, 0]);
     },
   });
@@ -93,7 +83,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   containerLandscape: {
-    // Custom styles for landscape orientation if needed
+    // Custom styles for landscape orientation si nécessaire
   },
   joystick: {
     width: 70,
