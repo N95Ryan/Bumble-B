@@ -1,3 +1,10 @@
+
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import Chronometre from "../../src/js/chronometre/chronometre";
+import { calculateDistance } from "../../src/js/script_joystick_roues";
+import Joystick from "./Joystick";
+import { calculateAverageSpeed } from "../../src/js/script_joystick_roues";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useRouter, Link } from "expo-router";
@@ -18,12 +25,13 @@ interface User {
   username: string;
   // Define other user properties as needed
 }
-
 interface ChronometreType {
   getTime: () => number;
   stop: () => void;
 }
 
+
+const Units = ({ is_landscape }: { is_landscape: boolean }) => {
 interface UnitsProps {
   is_landscape: boolean;
   user: User | null; // Update the type to include user
@@ -84,12 +92,15 @@ const Units = ({ is_landscape, user }: UnitsProps) => {
     if (chronometreRef.current) {
       chronometreRef.current.stop();
 
-      const totalTime = chronometreRef.current.getTime();
+      const totalTime = chronometreRef.current.getTime(); // Temps total écoulé
       if (totalTime > 0) {
         const finalAverageSpeed = calculateAverageSpeed(
           totalDistance,
           totalTime
         );
+
+        setAverageSpeed(finalAverageSpeed); // Mettre à jour la vitesse moyenne
+
         setAverageSpeed(finalAverageSpeed);
 
         const requestBody = {
@@ -128,6 +139,7 @@ const Units = ({ is_landscape, user }: UnitsProps) => {
         }
       } else {
         console.log("Temps total invalide.");
+
       }
     } else {
       console.log("Chronomètre non disponible.");
@@ -163,6 +175,13 @@ const Units = ({ is_landscape, user }: UnitsProps) => {
 
       <View
         style={
+          is_landscape ? styles.stopButtonHorizontal : styles.stopButtonVertical
+        }
+      >
+        <TouchableOpacity onPress={handleStop}>STOP</TouchableOpacity>
+
+      <View
+        style={
           is_landscape
             ? styles.buttonContainerHorizontal
             : styles.buttonContainerVertical
@@ -186,6 +205,7 @@ const Units = ({ is_landscape, user }: UnitsProps) => {
         >
           <Link href={"/dashboard"}>ACCUEIL</Link>
         </View>
+
       </View>
     </>
   );
@@ -220,6 +240,49 @@ const styles = StyleSheet.create({
     bottom: 24,
     padding: 24,
     borderRadius: 32,
+  },
+
+  joystickVertical: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  joystickHorizontal: {
+    position: "absolute",
+    bottom: 50,
+    right: 50,
+  },
+  stopButtonHorizontal: {
+    top: 150,
+    width: 50,
+    height: 25,
+    paddingHorizontal: 52,
+    paddingVertical: 26,
+    backgroundColor: "#cf142b",
+    color: "#FFFFFF",
+    borderRadius: 6,
+    fontSize: 22,
+    fontFamily: "Roboto",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  stopButtonVertical: {
+    display: "flex",
+    flexDirection: "column",
+    width: 50,
+    height: 25,
+    paddingHorizontal: 26,
+    paddingVertical: 26,
+    backgroundColor: "#cf142b",
+    color: "#FFFFFF",
+    borderRadius: 6,
+    fontSize: 14,
+    fontFamily: "Roboto",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   buttonContainerHorizontal: {

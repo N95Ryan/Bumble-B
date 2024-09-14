@@ -16,31 +16,53 @@ const Joystick = React.memo(({ onEmit, is_landscape }: JoystickProps) => {
   const position = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const maxOffset = 50;
 
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
-    onPanResponderMove: (e, gestureState) => {
-      const { dx, dy } = gestureState;
 
+  // Création du panResponder pour gérer les mouvements du joystick
+  const panResponder = PanResponder.create({
+
+    // Indique qu'on doit gérer l'interaction tactile dès que l'utilisateur commence à bouger le joystick
+    onMoveShouldSetPanResponder: () => true,
+    // Gestion du mouvement du joystick
+    onPanResponderMove: (e, gestureState) => {
+      const { dx, dy } = gestureState; // Récupère les décalages (distance) sur l'axe horizontal (dx) et vertical (dy)
+
+      // Clamp le déplacement pour qu'il ne dépasse pas maxOffset (50) dans les deux sens
       const clampedDx = Math.max(-maxOffset, Math.min(dx, maxOffset));
       const clampedDy = Math.max(-maxOffset, Math.min(dy, maxOffset));
 
+      // Met à jour la position du joystick avec les valeurs clampées
       position.setValue({ x: clampedDx, y: clampedDy });
 
+      // Appelle la fonction pour gérer le mouvement du joystick et calcule la vitesse
       const speedInMeterPerSecond = handleJoystickMove(clampedDx, clampedDy);
+
+
+      // Si une fonction onEmit est définie, envoie la vitesse calculée
+      if (typeof onEmit === 'function') {
+        onEmit(speedInMeterPerSecond); // Émet la vitesse (sous forme de message numérique) via onEmit
+
       console.log("Speed:", speedInMeterPerSecond);
 
       if (typeof onEmit === "function") {
         onEmit(speedInMeterPerSecond);
+
       }
     },
 
+    // Quand l'utilisateur relâche le joystick
     onPanResponderRelease: () => {
+      // remet le joystick a 0 avec une animation plus fluide
       Animated.spring(position, {
         toValue: { x: 0, y: 0 },
         useNativeDriver: false,
       }).start();
 
+
+      // pour que la vitesse revienne a 0;
+      if (typeof onEmit === 'function') {
+=======
       if (typeof onEmit === "function") {
+
         onEmit(0);
       }
       updateSpeed([0, 0, 0, 0]);
