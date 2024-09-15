@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Image } from "react-native";
+import axios from "axios";
 import RaceBoard from "@/components/RaceBoard/RaceBoard";
 import Navbar from "@/components/Navbar/Navbar";
-import axios from "axios"; // Assurez-vous d'avoir installé axios avec `npm install axios` ou `yarn add axios`
+import { launchImageLibrary } from 'react-native-image-picker';
 
 // Interface pour le payload JWT
 interface JwtPayload {
-  sub?: string; // Utiliser 'sub' comme clé si c'est la clé de votre nom d'utilisateur
+  sub?: string;
   // Ajouter d'autres champs si nécessaire
 }
 
@@ -26,9 +26,7 @@ function parseJwt(token: string) {
     const decoded = decodeURIComponent(
       jsonPayload
         .split("")
-        .map(function (c) {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-        })
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
         .join("")
     );
 
@@ -41,13 +39,13 @@ function parseJwt(token: string) {
 
 const getUsersByUsername = async (username: string, token: string) => {
   try {
+    console.log("Fetching users with username:", username);
     const response = await axios.get("http://localhost:8080/users", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     console.log("Users Response:", response.data);
-    // Filtrer les utilisateurs par nom d'utilisateur
     const filteredUsers = response.data.filter(
       (user: any) => user.username === username
     );
@@ -61,6 +59,7 @@ const getUsersByUsername = async (username: string, token: string) => {
 
 const getRacesById = async (userId: string, token: string) => {
   try {
+    console.log("Fetching races for userId:", userId);
     const response = await axios.get(
       `http://localhost:8080/users/${userId}/races`,
       {
@@ -80,50 +79,147 @@ const getRacesById = async (userId: string, token: string) => {
 export default function Dashboard() {
   const [username, setUsername] = useState<string>("");
   const [races, setRaces] = useState<any[]>([]);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUsername = async () => {
       try {
+        console.log("Fetching JWT token from AsyncStorage...");
         const token = await AsyncStorage.getItem("jwt_token");
-        console.log("Token récupéré depuis AsyncStorage:", token);
-
         if (token) {
-          // Décoder le JWT pour extraire le nom d'utilisateur
+          console.log("Token found:", token);
+          setToken(token);
           const decodedToken = parseJwt(token) as JwtPayload;
-          console.log("Payload décodé:", decodedToken);
           const userName = decodedToken?.sub || "Inconnu";
+          console.log("Decoded username:", userName);
           setUsername(userName);
 
-          // Obtenir l'utilisateur correspondant
           const users = await getUsersByUsername(userName, token);
-          const user = users[0]; // On suppose qu'il n'y a qu'un seul utilisateur avec ce nom
+          const user = users[0];
           if (user) {
-            // Obtenir les courses de l'utilisateur
+            console.log("User found:", user);
+            setUserId(user.id);
             const userRaces = await getRacesById(user.id, token);
             setRaces(userRaces);
+            if (user.avatarId) {
+              const avatarUri = `http://localhost:8080/documents/${user.avatarId}`;
+              console.log("Setting avatar URL:", avatarUri);
+              setAvatarUrl(avatarUri);
+            }
+          } else {
+            console.log("No user found with username:", userName);
           }
+        } else {
+          console.log("No token found in AsyncStorage.");
         }
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération du token ou des données utilisateur :",
-          error
-        );
+        console.error("Erreur lors de la récupération du token ou des données utilisateur :", error);
       }
     };
 
     fetchUsername();
   }, []);
 
+  const handleImagePick = () => {
+    console.log("Launching image picker...");
+    launchImageLibrary({ mediaType: 'photo', includeBase64: false }, async (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorMessage) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else {
+        console.log("Image picked:", response.assets);
+        const selectedFile = response.assets?.[0];
+        if (selectedFile && token) {
+          console.log("Selected file:", selectedFile);
+          try {
+            const { uri, type, fileName } = selectedFile;
+            console.log("File details:", { uri, type, fileName });
+            
+            const fileType = type || determineFileType(uri || ''); // Provide a default empty string
+            const fileDisplayName = fileName || 'unknown';
+            
+            if (uri && fileType) {
+              const formData = new FormData();
+              formData.append('file', {
+                uri,
+                type: fileType,
+                name: fileDisplayName,
+              } as any); // Casting as any to bypass type issues
+
+              console.log("Uploading file...");
+              const uploadResponse = await axios.post('http://localhost:8080/documents', formData, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'multipart/form-data',
+                },
+              });
+
+              console.log('Image Response:', uploadResponse.data);
+              const avatarId = uploadResponse.data.id;
+              console.log("Avatar ID received:", avatarId);
+              if (avatarId && userId) {
+                console.log("Updating avatar...");
+                await updateAvatar(avatarId);
+              }
+            } else {
+              console.log("File details are missing (uri or type is undefined).");
+            }
+          } catch (error) {
+            console.error('Upload Error:', error);
+          }
+        } else {
+          console.log("No file selected or token missing.");
+        }
+      }
+    });
+  };
+
+  const determineFileType = (fileUri: string) => {
+    // Déterminez le type basé sur l'extension du fichier
+    if (fileUri.endsWith('.jpg') || fileUri.endsWith('.jpeg')) return 'image/jpeg';
+    if (fileUri.endsWith('.png')) return 'image/png';
+    if (fileUri.endsWith('.gif')) return 'image/gif';
+    return 'application/octet-stream'; // Type par défaut
+  };
+
+  const updateAvatar = async (avatarId: string) => {
+    if (userId && token) {
+      try {
+        console.log("Sending request to update avatar...");
+        await axios.patch(
+          `http://localhost:8080/users/${userId}/avatar/${avatarId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const newAvatarUrl = `http://localhost:8080/documents/${avatarId}`;
+        console.log("Avatar updated successfully. New avatar URL:", newAvatarUrl);
+        setAvatarUrl(newAvatarUrl);
+      } catch (error) {
+        console.error('Update Avatar Error:', error);
+      }
+    } else {
+      console.log("User ID or token is missing. Cannot update avatar.");
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../../components/RaceBoard/assets/Frame-1.png")}
-        style={{ width: 56, height: 56 }}
-      />
+      <TouchableOpacity onPress={handleImagePick}>
+        <Image
+          source={avatarUrl ? { uri: avatarUrl } : require("../../components/RaceBoard/assets/Frame-1.png")}
+          style={{ width: 56, height: 56 }}
+        />
+      </TouchableOpacity>
       <Text style={styles.greeting}>Bonjour {username}</Text>
       <Text style={styles.text}>Bienvenue sur Bumble B 🐝</Text>
-      <RaceBoard races={races} />{" "}
-      {/* Passez les courses au composant RaceBoard */}
+      <RaceBoard races={races} />
       <Navbar />
     </View>
   );

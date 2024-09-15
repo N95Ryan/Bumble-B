@@ -26,9 +26,9 @@ const GroupWrapper: React.FC<GroupWrapperProps> = ({
   const averageWheelRotation = calculateAverage(wheelRotationSpeed);
 
   const dataRows = [
-    { label: "Temps moyen", value: `${averageTimeSpent.toFixed(2)} min` },
-    { label: "Distance moyenne parcourue", value: `${averageDistance.toFixed(2)} m` },
-    { label: "Vitesse moyenne", value: `${averageSpeed.toFixed(2)} m/s` },
+    { label: "Temps moyen :", value: `${averageTimeSpent.toFixed(2)} min` },
+    { label: "Distance moyenne parcourue :", value: `${averageDistance.toFixed(2)} m` },
+    { label: "Vitesse moyenne :", value: `${averageSpeed.toFixed(2)} m/s` },
     {
       label: "Vitesse de rotation des roues",
       value: `${averageWheelRotation.toFixed(2)} tr/s`,

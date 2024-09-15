@@ -6,7 +6,7 @@ import { format, parse } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 interface Race {
   createdAt: string;
@@ -107,27 +107,35 @@ const HistoryPage: React.FC = () => {
           <Text style={styles.subtitle}>Retrouvez ici vos dernières courses, ainsi que vos statistiques.</Text>
         </View>
       </View>
-      <View style={styles.dateSection}>
-        {dateCards.map((card) => (
-          <DateCard
-            key={card.id}
-            id={card.id}
-            date={card.date}
-            metrics={card.metrics}
-            badgeCount={card.badgeCount}
-            expanded={expandedCard === card.id}
-            onToggle={() => toggleCard(card.id)}
-            onStatsClick={() => handleStatsClick(card.date)}
-            onDeleteClick={() => handleDeleteClick(card.date)}
-          />
-        ))}
-      </View>
+
+      {/* Ajout du ScrollView avec la barre de défilement invisible */}
+      <ScrollView 
+        style={styles.scrollContainer} 
+        contentContainerStyle={styles.scrollContentContainer} 
+        showsVerticalScrollIndicator={false} // Barre de défilement invisible
+      >
+        <View style={styles.dateSection}>
+          {dateCards.map((card) => (
+            <DateCard
+              key={card.id}
+              id={card.id}
+              date={card.date}
+              metrics={card.metrics}
+              badgeCount={card.badgeCount}
+              expanded={expandedCard === card.id}
+              onToggle={() => toggleCard(card.id)}
+              onStatsClick={() => handleStatsClick(card.date)}
+              onDeleteClick={() => handleDeleteClick(card.date)}
+            />
+          ))}
+        </View>
+      </ScrollView>
+
       <View style={styles.navbarContainer}>
         <Navbar />
       </View>
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({
@@ -164,6 +172,12 @@ const styles = StyleSheet.create({
   dateSection: {
     flexDirection: "column",
     gap: 24,
+  },
+  scrollContainer: {
+    flex: 1, // Pour permettre à ScrollView de prendre tout l'espace disponible
+  },
+  scrollContentContainer: {
+    paddingBottom: 150, // Pour éviter que le contenu soit masqué par la navbar
   },
   navbarContainer: {
     position: 'absolute',
