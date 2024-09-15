@@ -1,5 +1,12 @@
 import React, { useRef, useState } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Platform,
+} from "react-native";
+import * as ScreenOrientation from "expo-screen-orientation"; // Importer le module
 
 const Bandeau = ({ is_landscape }: { is_landscape: boolean }) => {
   const [isRunning, setIsRunning] = useState(false);
@@ -9,6 +16,23 @@ const Bandeau = ({ is_landscape }: { is_landscape: boolean }) => {
     setIsRunning(false);
     if (chronometreRef.current) {
       chronometreRef.current.stop();
+    }
+  };
+
+  // Fonction pour changer l'orientation de l'écran
+  const rotateScreen = async () => {
+    try {
+      if (Platform.OS !== "web") {
+        // Vérifie si ce n'est pas un navigateur web
+        // Basculer en mode paysage
+        await ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.LANDSCAPE
+        );
+      } else {
+        console.log("La rotation de l'écran n'est pas disponible sur le web.");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la rotation de l'écran :", error);
     }
   };
 
@@ -25,10 +49,12 @@ const Bandeau = ({ is_landscape }: { is_landscape: boolean }) => {
             style={styles.icon}
             source={require("../../assets/images/icon_photo.svg")}
           />
-          <Image
-            style={styles.icon}
-            source={require("../../assets/images/icon_rotate.svg")}
-          />
+          <TouchableOpacity onPress={rotateScreen}>
+            <Image
+              style={styles.icon}
+              source={require("../../assets/images/icon_rotate.svg")}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </>

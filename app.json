@@ -29,8 +29,11 @@
     "plugins": [
       "expo-router"
     ],
+    "expo-screen-orientation": {
+      "initialOrientation": "DEFAULT"
+    }
+    },
     "experiments": {
       "typedRoutes": true
     }
   }
-}

@@ -4295,6 +4295,11 @@ expo-router@~3.5.14:
     react-native-helmet-async "2.0.4"
     schema-utils "^4.0.1"
 
+expo-screen-orientation@^7.0.5:
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/expo-screen-orientation/-/expo-screen-orientation-7.0.5.tgz#0a517982151c6519fa4b10ce27047de39c1f92cf"
+  integrity sha512-1j0MzVzYpjKQo4BWowQ3ZYwC3OnddX/8k06C8VYTAxMyd8ou1k+rG4tm+GIV2n2RSzc3g7cfPlQwSYr3/SGmbg==
+
 expo-splash-screen@0.27.4:
   version "0.27.4"
   resolved "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-0.27.4.tgz"
