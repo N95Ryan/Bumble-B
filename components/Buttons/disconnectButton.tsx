@@ -5,9 +5,7 @@ import { router, useRouter } from "expo-router";
 const DisconnectButton = () => {
   const redirection = useRouter();
 
-  const handleDisconnect = () => {
-    console.log("Déconnecté avec succès.");
-  };
+  const handleDisconnect = () => {};
 
   router.push("/home");
 

@@ -25,7 +25,6 @@ export default function ModesPage() {
   function modeDeLaVoiture(selectedMode: string) {
     if (selectedMode === "manual") {
       sendCommand(10, 0);
-      console.log("Mode manuel activé");
       desactivermodeGuide();
     } else if (selectedMode === "guided") {
       activerModeGuide();

@@ -29,7 +29,6 @@ const Bandeau = ({ is_landscape }: { is_landscape: boolean }) => {
           ScreenOrientation.OrientationLock.LANDSCAPE
         );
       } else {
-        console.log("La rotation de l'écran n'est pas disponible sur le web.");
       }
     } catch (error) {
       console.error("Erreur lors de la rotation de l'écran :", error);

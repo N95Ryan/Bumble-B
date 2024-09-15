@@ -10,7 +10,6 @@ const maxReconnectAttempts = 10;
 // Initialisation du serveur WebSocket
 export function initWebSocket() {
   if (gateway) {
-    console.log("Connexion...");
     websocket = new WebSocket(gateway);
 
     websocket.onopen = onOpen;
@@ -18,25 +17,21 @@ export function initWebSocket() {
     websocket.onerror = onError; // Gère les erreurs WebSocket
   }
   else {
-    console.log("Erreur lors de l'initialisation du websocket")
   }
 }
 
 
 // Callback lorsque la connexion est ouverte
 function onOpen(event) {
-  console.log('Connexion établie');
   reconnectAttempts = 0; // Réinitialise les tentatives de reconnexion
 }
 
 // Callback lorsque la connexion est fermée
 function onClose(event) {
-  console.log('Connection fermé');
 
   // Reconnecte automatiquement si le nombre max de tentatives n'est pas atteint
   if (reconnectAttempts < maxReconnectAttempts) {
     reconnectAttempts++;
-    console.log(`Tentative de reconnexion...`);
     setTimeout(initWebSocket, 2000);
   } else {
     console.error('Maximum de tentative de connexion atteinte.');

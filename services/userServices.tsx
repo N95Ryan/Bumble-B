@@ -63,21 +63,27 @@ const findUser = async (id: number): Promise<User | null> => {
     );
     return data;
   } catch (error) {
-    console.log("Erreur lors de la récupération de l'utilisateur:", error);
     return null;
   }
 };
 
 // Création d'un nouvel utilisateur
 const createUser = async (
-  firstname: string,   // Nouveau paramètre
-  lastname: string,    // Nouveau paramètre
+  firstname: string, // Nouveau paramètre
+  lastname: string, // Nouveau paramètre
   username: string,
   email: string,
   password: string,
   confirmedPassword: string
 ) => {
-  if (!firstname || !lastname || !username || !email || !password || !confirmedPassword) {
+  if (
+    !firstname ||
+    !lastname ||
+    !username ||
+    !email ||
+    !password ||
+    !confirmedPassword
+  ) {
     alert("Veuillez remplir tous les champs.");
     return;
   }
@@ -89,8 +95,8 @@ const createUser = async (
 
   try {
     const response = await userService.post("/register", {
-      firstname,         // Inclure dans le corps de la requête
-      lastname,          // Inclure dans le corps de la requête
+      firstname, // Inclure dans le corps de la requête
+      lastname, // Inclure dans le corps de la requête
       username,
       email,
       password,
@@ -103,7 +109,6 @@ const createUser = async (
       await AsyncStorage.setItem("jwt_token", response.data.token);
     }
 
-    console.log("Réponse du serveur:", response);
     alert("Utilisateur créé avec succès !");
   } catch (error) {
     console.error("Erreur lors de la création de l'utilisateur:", error);
@@ -115,8 +120,8 @@ const createUser = async (
 const updateUser = async (
   id: number,
   username: string,
-  firstname: string,   // Nouveau paramètre
-  lastname: string,    // Nouveau paramètre
+  firstname: string, // Nouveau paramètre
+  lastname: string, // Nouveau paramètre
   email: string,
   password: string | null
 ): Promise<void> => {
@@ -205,7 +210,10 @@ const checkUsername = async (username: string): Promise<AxiosResponse> => {
     );
     return response;
   } catch (error) {
-    console.error("Erreur lors de la vérification du nom d'utilisateur:", error);
+    console.error(
+      "Erreur lors de la vérification du nom d'utilisateur:",
+      error
+    );
     throw error;
   }
 };

@@ -115,7 +115,6 @@ const Units = ({ is_landscape, user }: UnitsProps) => {
             },
           });
 
-          console.log("Données envoyées avec succès.");
           router.push("/history"); // Redirige vers l'historique après l'envoi
         } catch (error) {
           if (axios.isAxiosError(error)) {
@@ -128,10 +127,8 @@ const Units = ({ is_landscape, user }: UnitsProps) => {
           }
         }
       } else {
-        console.log("Temps total invalide."); // Affiche un message si le temps est invalide
       }
     } else {
-      console.log("Chronomètre non disponible."); // Affiche un message si le chronomètre n'est pas prêt
     }
   };
 

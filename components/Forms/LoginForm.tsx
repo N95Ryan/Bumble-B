@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
 import { useRouter, Link } from "expo-router";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { authentification } from "../../services/userServices";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons } from '@expo/vector-icons'; // Import de Ionicons pour les icônes
+import { Ionicons } from "@expo/vector-icons"; // Import de Ionicons pour les icônes
 
 export const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -30,14 +37,12 @@ export const LoginForm = () => {
 
     try {
       const response = await authentification(username, password);
-      console.log("Réponse de l'API :", response);
 
       if (response && response.token) {
         await AsyncStorage.setItem("jwt_token", response.token);
         Alert.alert("Succès", "Connexion réussie !");
 
         const token = await AsyncStorage.getItem("jwt_token");
-        console.log("Token JWT récupéré :", token);
 
         router.push("/dashboard");
       } else {
@@ -58,7 +63,7 @@ export const LoginForm = () => {
         onChangeText={setUsername}
         value={username}
       />
-      
+
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.passwordInput}
@@ -69,7 +74,11 @@ export const LoginForm = () => {
           value={password}
         />
         <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
-          <Ionicons name={passwordVisible ? "eye-off" : "eye"} size={24} color="#94A3B8" />
+          <Ionicons
+            name={passwordVisible ? "eye-off" : "eye"}
+            size={24}
+            color="#94A3B8"
+          />
         </TouchableOpacity>
       </View>
 

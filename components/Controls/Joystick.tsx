@@ -37,7 +37,6 @@ const Joystick = React.memo(({ onEmit, is_landscape }: JoystickProps) => {
       // Si une fonction onEmit est définie, envoie la vitesse calculée
       if (typeof onEmit === "function") {
         onEmit(speedInMeterPerSecond); // Émet la vitesse (sous forme de message numérique) via onEmit
-        console.log("Speed:", speedInMeterPerSecond);
       }
     },
 
