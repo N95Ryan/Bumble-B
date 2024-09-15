@@ -1,114 +1,99 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { VictoryArea, VictoryChart, VictoryTheme, VictoryAxis, VictoryLabel } from 'victory';
 import axios from 'axios';
 
+interface RaceData {
+
+  timeSpent: number;
+  distanceCovered: number;
+  averageSpeed: number;
+  wheelRotationSpeed: number;
+}
+
 export default function StatsPage() {
 
-    const token = 'eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtYXhpbWVtYXhpbWUiLCJpYXQiOjE3MjU2MjY3NzEsImV4cCI6MTcyNTcxMzE3MX0.LM4jU_swMkIQe3a-jinvIG_S9C3rfLJ3EvaqqLJzXBlBkTUImH-TH0ndVXyKcuGM';
+  const token = 'eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtYXhpbWUiLCJpYXQiOjE3MjY0MTA2MzQsImV4cCI6MTcyNjQ5NzAzNH0.i6Qk9Cp7LNDihzE0n5q03OlMJg5wm44fNMrA8ceVPVY7g7bdLaOanWa9n7MV4Wyd';
 
-    const [graphData, setgraphData] = useState('')
-    const getgraphData = () => {
-        axios.get('http://localhost:8080/users/1/races', {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        }).then(res => {
-            //console.log(res.data.content)
-            setgraphData(res.data.content)
-        }).catch(err => {
-            console.log(err)
-        })
+  const [dataGraph, setDataGraph] = useState<{ x: number, y: number }[]>([]);
+  const [raceData, setRaceData] = useState<RaceData[] | null>(null);
 
-    }
+  const getGraphData = () => {
+    axios.get('http://localhost:8080/users/1/races', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (Array.isArray(res.data)) {
+          const transformedData = res.data.map((item: RaceData) => ({
+            x: item.distanceCovered,
+            y: item.averageSpeed,
+          }));
+          setDataGraph(transformedData);
+          setRaceData(res.data);
+        }
+      })
+      .catch(error => {
+      });
+  }
 
-    const [dataGraph, setDataGraph] = useState([
-        { x: 0, y: 0 },
-        { x: 1, y: 1 },
-        { x: 2, y: 2 },
-        { x: 4, y: 4 },
-        { x: 5, y: 7 },
-    ]);
+  useEffect(() => {
+    getGraphData();
+  }, []);
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.graphbox}>
-                <VictoryChart
-                    theme={VictoryTheme.material}
-                    width={240}
-                    height={170}
-                >
-                    <VictoryAxis
-                        label="Temps (s)"
-                        axisLabelComponent={<VictoryLabel />}
-                        style={{
-                            axis: { stroke: "#000" },
-                            axisLabel: { fontSize: 12, padding: 30 },
-                            tickLabels: { fontSize: 10, padding: 5 },
-                        }}
-                    />
+  return (
+    <View style={styles.container}>
+      <View style={styles.graphbox}>
+        <VictoryChart
+          theme={VictoryTheme.material}
+          width={240}
+          height={170}
+        >
+          <VictoryAxis
+            label="Distance (m)"
+            axisLabelComponent={<VictoryLabel />}
+            style={{
+              axis: { stroke: "#000" },
+              axisLabel: { fontSize: 12, padding: 30 },
+              tickLabels: { fontSize: 10, padding: 5 },
+            }}
+          />
 
-                    <VictoryAxis
-                        dependentAxis
-                        label="Vitesse (m/s)"
-                        axisLabelComponent={<VictoryLabel angle={-90} />}
-                        style={{
-                            axis: { stroke: "#000" },
-                            axisLabel: { fontSize: 12, padding: 30 },
-                            tickLabels: { fontSize: 10, padding: 5 },
-                        }}
-                    />
+          <VictoryAxis
+            dependentAxis
+            label="Vitesse (m/s)"
+            axisLabelComponent={<VictoryLabel angle={-90} />}
+            style={{
+              axis: { stroke: "#000" },
+              axisLabel: { fontSize: 12, padding: 30 },
+              tickLabels: { fontSize: 10, padding: 5 },
+            }}
+          />
 
-                    <VictoryArea
-                        style={{
-                            data: { fill: "#000" },
-                        }}
-                        data={dataGraph}
-                    />
-                </VictoryChart>
-            </View>
-        </View>
-    );
+          <VictoryArea
+            style={{
+              data: { fill: "#000" },
+            }}
+            data={dataGraph}
+          />
+        </VictoryChart>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    graphbox: {
-        backgroundColor: '#fff',
-        width: '50%',
-        justifyContent: 'center',
-    },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  graphbox: {
+    backgroundColor: '#fff',
+    width: '100%',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
