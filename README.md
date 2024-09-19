@@ -1,39 +1,65 @@
 # Description du projet 👨‍🏫
 
 Bumble B est une application mobile développée dans le cadre d'un projet scolaire.
-L'application sert à contrôler la vitesse d'une petite voiture équipée d'un module ESP32.
-Cette application permettra à l'utilisateur non seulement de piloter le véhicule, mais aussi de visualiser diverses données sous forme de graphiques.
 
-# Stack 🖥️
+L'application sert à contrôler une petite voiture équipée d'un module ESP32.
 
-Voici les technologies utilisées au sein de ce projet :
+Cette application permettra à l'utilisateur non seulement de piloter le véhicule, mais aussi de visualiser diverses données sous forme de graphiques. Le contrôle de la vitesse, de la trajectoire ainsi que la récupération de
+données et de statistiques.
 
-- ## Front-end 🚀
+# Stack technique 🖥
 
-- ### React Native
+## Front-end 🚀
 
-Le développement front-end de notre application repose sur [React Native](https://reactnative.dev/), cet outil nous offre l'avantage de pouvoir développer l'application pour iOS et Android avec une seule codebase. 
-Il se différencie également par son ergonomie, simplifiant ainsi la maintenance du code.
+Voici les technologies utilisées en Front-end au sein de ce projet :
 
-- ### Expo
+- React Native
 
-[Expo](https://expo.dev/) est un outil qui permet de développer nos applications mobiles. Nous l'avons choisi principalement pour sa simplicité d’utilisation ainsi que pour sa compatibilité avec React Native. Cela nous élimine également la nécessité de configurer manuellement les environnements iOS et Android, ce qui peut être complexe et chronophage.
+Le développement front-end de notre application repose sur [React Native](https://reactnative.dev/), cet outil nous permet de développer l'application sous iOS et Android avec une seule codebase.
 
-- ## Back-end 🛠
+Il se différencie également par son ergonomie, simplifiant la maintenance du code.
 
-- ### Java — Spring Boot
+- Expo
 
-Utiliser [Java](https://docs.oracle.com/en/java/) avec [Spring Boot](https://spring.io/) pour un projet offre une architecture robuste et modulaire, une vaste communauté de support, une sécurité renforcée, une excellente gestion des erreurs, ainsi qu'une efficacité de développement grâce à ses fonctionnalités telles que l'injection de dépendances et la configuration par convention, ce qui facilite la création d'applications fiables et évolutives.
+[Expo](https://expo.dev/) est un outil qui permet de développer nos applications mobiles. Nous l'avons choisi principalement pour sa simplicité d’utilisation ainsi que pour sa compatibilité avec React Native. 
 
-- ### C++
+Cela nous élimine également la nécessité de configurer manuellement les environnements iOS et Android, ce qui est un gain de temps.
 
-Utiliser [C++](https://learn.microsoft.com/fr-fr/cpp/cpp/?view=msvc-170) permet de tirer parti des performances optimales offertes par un langage compilé, essentiel pour gérer les ressources limitées des microcontrôleurs. De plus, le C++ offre un contrôle précis du matériel, une flexibilité dans le développement et une large communauté de support, facilitant la mise en œuvre de fonctionnalités complexes et l'optimisation du code pour des applications en temps réel.
+
+- TypeScript
+
+TypeScript a été choisi pour ce projet afin d'améliorer la qualité du code et d'assurer une meilleure maintenabilité à long terme. En tant que sur-ensemble typé de JavaScript, TypeScript permet de définir des types explicites pour les variables, fonctions et objets, ce qui aide à prévenir les erreurs fréquentes et facilite le travail en équipe.
+
+- Axios
+
+Axios a été utilisé pour effectuer des requêtes HTTP vers le serveur ESP32 et d'autres points d’accès API nécessaires pour le projet. L’application Bumble B dépend de la communication réseau pour récupérer et envoyer des informations sur la voiture en temps réel, comme les vitesses et les données des capteurs.
+
+## Back-end 🛠️
+
+Voici le lien vers les repos GitHub en lien avec le back-end du projet.
+
+- Back-end : https://github.com/annemhd/fil-rouge-backend
+- ESP : https://github.com/jasonljasonl/websocket-mqtt-bumble-b
+
+
+
+## Installation 📥
+
+Voici comment installer la partie front-end du projet :
+```bash
+  git clone https://github.com/N95Ryan/Bumble-B.git
+  cd Bumble-B
+  yarn
+  yarn start
+```
+    
+
 
 # 👥 Auteurs
-- [Ryan PINA-SILASSE](https://github.com/N95Ryan)
-- [Nathan PINARD](https://github.com/YOUGBOY95)
-- [Anne-Catherine MICHAUD](https://github.com/annemhd)
-- [Elisa LENOTRE]( https://github.com/elisalenotre)
-- [Nolan RAMOS](https://github.com/Nolan-ramos)
-- [Jason LANDIM](https://github.com/jasonljasonl)
-- [Maxime DESRUETS](https://github.com/Jylt-wNz)
+- [@Ryan PINA-SILASSE](https://github.com/N95Ryan)
+- [@Nathan PINARD](https://github.com/YOUGBOY95)
+- [@Anne-Catherine MICHAUD](https://github.com/annemhd)
+- [@Elisa LENOTRE]( https://github.com/elisalenotre)
+- [@Nolan RAMOS](https://github.com/Nolan-ramos)
+- [@Jason LANDIM](https://github.com/jasonljasonl)
+- [@Maxime DESRUETS](https://github.com/Jylt-wNz)
