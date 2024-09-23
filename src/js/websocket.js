@@ -1,6 +1,6 @@
 // Adresse du serveur WebSocket
 export const gateway = typeof window !== 'undefined' 
-  ? `ws://172.20.10.3/ws` 
+  ? `ws://172.20.10.3/bumble-b` 
   : '';
 
 export let websocket = null;
